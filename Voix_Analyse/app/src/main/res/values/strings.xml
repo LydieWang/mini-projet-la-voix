@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Voix Analyse</string>
-    <string name="button_record">Start Recording</string>
+    <string name="button_start">Start</string>
+    <string name="button_stop">Stop</string>
     <string name="text_record">Press the button for recording</string>
 </resources>
