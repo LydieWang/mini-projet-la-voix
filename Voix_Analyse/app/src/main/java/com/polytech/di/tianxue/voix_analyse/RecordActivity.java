@@ -46,7 +46,7 @@ public class RecordActivity extends AppCompatActivity {
     public void startRecording(View view){
         textView_hint = new TextView(this);
         textView_hint.setTextSize(40);
-        textView_hint.setText("STARTING");
+        textView_hint.setText("RECORDING...");
         layout.addView(textView_hint);
         button_start.setEnabled(false);
         button_stop.setEnabled(true);
@@ -59,7 +59,7 @@ public class RecordActivity extends AppCompatActivity {
         }
 
         try {
-            recAudioFile = new File(filePath, "Nouveau Enregistrement.amr");
+            recAudioFile = new File(filePath, "Nouveau Enregistrement.wav");
             if (recAudioFile.exists()) {
                 recAudioFile.delete();
             }
