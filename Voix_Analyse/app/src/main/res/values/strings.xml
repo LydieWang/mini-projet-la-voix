@@ -2,5 +2,7 @@
     <string name="app_name">Voix Analyse</string>
     <string name="button_start">Start</string>
     <string name="button_stop">Stop</string>
-    <string name="text_record">Press the button for recording</string>
+    <string name="button_analyse">To see the result !</string>
+    <string name="text_hint">Press the button for recording</string>
+    <string name="text_record">RECORDING...</string>
 </resources>

@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_record"
+        android:text="@string/text_hint"
         android:id="@+id/textView"
         android:layout_marginTop="180dp"
         android:layout_alignParentTop="true"
@@ -27,12 +27,22 @@
         android:layout_centerHorizontal="true"
         android:onClick="startRecording"/>
 
+
     <Button
         android:id="@+id/button_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_stop"
         android:layout_marginTop="100dp"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:onClick="stopRecording"/>
+    <Button
+        android:id="@+id/button_analyse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_analyse"
+        android:layout_marginTop="150dp"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:onClick="stopRecording"/>
