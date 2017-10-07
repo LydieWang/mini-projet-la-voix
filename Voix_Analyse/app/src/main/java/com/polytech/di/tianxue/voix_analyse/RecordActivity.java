@@ -1,108 +1,92 @@
 package com.polytech.di.tianxue.voix_analyse;
 
 
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 
 public class RecordActivity extends AppCompatActivity {
 
-
+    private TextView textView_recording;
     private TextView textView_hint;
-    private RelativeLayout layout;
     private Button button_start;
     private Button button_stop;
     private Button button_analyse;
-    /*
-    private MediaRecorder mediaRecorder;
-    private File dirSD;
-    private boolean isCardMonted;
-    private File recAudioFile;
-    private String filePath;
-*/
-
-    private AudioCapturer myAudioCapturer;
-    private AudioPlayer audioPlayer;
+    private AudioCapturer audioCapturer;
+    private Chronometer chronometer = null;
+    private static final int STAT_START_RECORD = 0;
+    private static final int STAT_STOP_RECORD = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-
-        init();
+        initView();
     }
 
-    private void init(){
-        myAudioCapturer = new AudioCapturer();
-        layout = (RelativeLayout)findViewById(R.id.content);
+    private void initView(){
+
         button_start = (Button)findViewById(R.id.button_start);
         button_stop = (Button)findViewById(R.id.button_stop);
         button_analyse = (Button)findViewById(R.id.button_analyse);
+        chronometer  = (Chronometer) findViewById(R.id.chronometer);
+        textView_recording = (TextView) findViewById(R.id.text_recording);
+        textView_hint = (TextView) findViewById(R.id.text_hint);
+
         button_start.setEnabled(true);
         button_stop.setEnabled(false);
         button_analyse.setEnabled(false);
-        /*
-        isCardMonted = false;
-        */
+        chronometer.setVisibility(View.INVISIBLE);
+        textView_recording.setVisibility(View.INVISIBLE);
+    }
+
+    private void setView(int status){
+
+        if(status == STAT_START_RECORD){
+            button_start.setEnabled(false);
+            button_stop.setEnabled(true);
+            chronometer.setVisibility(View.VISIBLE);
+            textView_recording.setVisibility(View.VISIBLE);
+            textView_hint.setVisibility(View.INVISIBLE);
+
+        }else if(status == STAT_STOP_RECORD){
+            button_stop.setEnabled(false);
+            button_analyse.setEnabled(true);
+            textView_recording.setText(getText(R.string.text_finish));
+
+        }else{
+            return;
+        }
+    }
+
+    private void initChronometer(){
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.setFormat("%s");
     }
 
     public void startRecording(View view){
-        textView_hint = new TextView(this);
-        textView_hint.setTextSize(40);
-        textView_hint.setText(getString(R.string.text_record));
-        layout.addView(textView_hint);
-        button_start.setEnabled(false);
-        button_stop.setEnabled(true);
 
-        /* start capturing the audio*/
-        myAudioCapturer.startCapture();
+        setView(STAT_START_RECORD);
 
-        /*
-        isCardMonted = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+        // start capturing the audio
+        audioCapturer = new AudioCapturer();
+        audioCapturer.startCapture();
 
-        if(isCardMonted) {
-            dirSD = Environment.getExternalStorageDirectory();
-            filePath = dirSD.getPath();
-        }
-
-        try {
-            recAudioFile = new File(filePath, "Nouveau Enregistrement.wav");
-            if (recAudioFile.exists()) {
-                recAudioFile.delete();
-            }
-            mediaRecorder = new MediaRecorder();
-
-            // 设置录音来源为麦克风
-            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-            //文件保存位置
-            mediaRecorder.setOutputFile(recAudioFile.getAbsolutePath());
-            mediaRecorder.prepare();
-            mediaRecorder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
+        initChronometer();
+        chronometer.start();
+        //chronometer.setOnChronometerTickListener(new ChronometerListener());
     }
 
     public void stopRecording(View view){
-        textView_hint.setVisibility(view.INVISIBLE);
-        button_stop.setEnabled(false);
-        button_analyse.setEnabled(true);
+        setView(STAT_STOP_RECORD);
 
-        myAudioCapturer.stopCapture();
+        audioCapturer.stopCapture();
+        chronometer.stop();
 
-        /* MediaRecorder
-        if(recAudioFile != null) {
-            mediaRecorder.stop();
-            mediaRecorder.release();
-        }
-        */
     }
 }

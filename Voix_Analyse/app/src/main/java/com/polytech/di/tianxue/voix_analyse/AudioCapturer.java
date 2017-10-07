@@ -4,11 +4,9 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 
+import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -17,17 +15,19 @@ import java.io.IOException;
  */
 
 public class AudioCapturer {
+
+    /* the parameters of the audio */
+    private static final String FILE_NAME = "New Record";
     private static final int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC;
-    private static final int AUDIO_SAMPLE_RATE = 44100;
+    private static final int AUDIO_SAMPLE_RATE = 44100; //Hz
     private static final int AUDIO_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;
     private static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
 
-    private AudioRecord audioRecord;
+    private File audioFile;
     private int minBufferSize = 0;
-    private  Thread captureThread;
-    private boolean isCaptureStarted = false;
-    private static final String TAG = "AudioCapturer";
-    private byte[] audioData;
+    private AudioRecord audioRecord;
+    private Thread captureThread;
+    private String fillPath = Environment.getExternalStorageDirectory().getPath();
 
     public boolean startCapture(){
         return startCapture(AUDIO_SOURCE, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL_CONFIG, AUDIO_FORMAT);
@@ -35,88 +35,95 @@ public class AudioCapturer {
 
     public boolean startCapture(int audioSource, int sampleRateInHz, int channelConfig, int audioFormat) {
 
-        if(isCaptureStarted){
-            Log.e(TAG, "AudioCapturer is already started !");
-        }
-        minBufferSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
-        if (minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
-            Log.e(TAG, "Invalid value of minBufferSize !");
+        try{
+            // create a new file to store the audio data
+            audioFile = new File(fillPath +"/"+FILE_NAME);
+            if(audioFile.exists()){ // if this file already exists, delete it
+                if(!audioFile.delete()){ // if fail to delete this file
+                    return false;
+                }
+            }
+            if(!audioFile.createNewFile()){ // if fail to create the new file
+                return false;
+            }
+        }catch (IOException e){
+            e.printStackTrace();
             return false;
         }
-        audioRecord = new AudioRecord(audioSource, sampleRateInHz, channelConfig,audioFormat, minBufferSize);
-        if (audioRecord.getState() == AudioRecord.STATE_UNINITIALIZED) {
-            Log.e(TAG, "AudioRecord uninitialized !");
+
+        // set minBufferSize
+        minBufferSize = AudioRecord.getMinBufferSize(sampleRateInHz,
+                channelConfig,
+                audioFormat);
+        if (minBufferSize == AudioRecord.ERROR_BAD_VALUE) { // if there is an error
             return false;
         }
+
+        // instantiate an AudioRecord object
+        audioRecord = new AudioRecord(audioSource,
+                sampleRateInHz,
+                channelConfig,
+                audioFormat,
+                minBufferSize);
+        if (audioRecord.getState() == AudioRecord.STATE_UNINITIALIZED) { //if there is an error
+            return false;
+        }
+
+        // start recording
         audioRecord.startRecording();
-        captureThread = new Thread(new AudioCaptureRunnable());
+        // start a new thread
+        captureThread = new Thread(new AudioCaptureThread());
         captureThread.start();
-        isCaptureStarted = true;
 
         return true;
     }
 
     public void stopCapture() {
 
-        if(isCaptureStarted){
+        if(audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING){
+            // stop recording
+            audioRecord.stop();
+
             try {
                 captureThread.interrupt();
                 captureThread.join(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING){
-                audioRecord.stop();
-            }
-
-            audioRecord.release();
-            isCaptureStarted = false;
-            audioRecord = null;
-            captureThread = null;
-
-            Log.d(TAG, "AudioCapturer successfully stopped !");
         }
     }
 
-    public byte [] getAudioData(){
-        return audioData;
-    }
-
-    private class AudioCaptureRunnable implements Runnable{
+    private class AudioCaptureThread implements Runnable{
         @Override
         public void run() {
 
-            FileOutputStream os = null;
-
+            DataOutputStream dos = null;
+            short[] audioData = new short[minBufferSize/2];
             try {
-                os = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getPath(),"NEW"));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            while (isCaptureStarted) {
-                audioData = new byte[minBufferSize];
-
-                int readState = audioRecord.read(audioData, 0, minBufferSize);
-                if (readState == AudioRecord.ERROR_INVALID_OPERATION) {
-                    Log.e(TAG , "Error ERROR_INVALID_OPERATION");
+                dos = new DataOutputStream(new FileOutputStream(audioFile));
+                int readSize;
+                while(audioRecord.getRecordingState() == audioRecord.RECORDSTATE_RECORDING){
+                    readSize = audioRecord.read(audioData, 0, audioData.length);
+                    if(readSize != audioRecord.ERROR_INVALID_OPERATION  ||
+                           readSize != audioRecord.ERROR_BAD_VALUE ){
+                        for(int i = 0; i < readSize; i++){
+                            dos.writeShort(audioData[i]);
+                            dos.flush();
+                        }
+                    }
                 }
-                else if (readState == AudioRecord.ERROR_BAD_VALUE) {
-                    Log.e(TAG , "Error ERROR_BAD_VALUE");
-                }else{
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                if(dos != null){
                     try {
-                        /* write the audio data into a file */
-                        os.write(audioData);
+                        dos.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            }
-
-            try {
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                audioRecord.release();
+                audioRecord = null;
             }
         }
     }

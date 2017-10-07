@@ -7,13 +7,31 @@
     android:layout_height="match_parent"
     tools:context="com.polytech.di.tianxue.voix_analyse.RecordActivity"
     >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_record"
+        android:id="@+id/text_recording"
+        android:textSize="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"/>
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/text_recording"
+        android:layout_centerHorizontal="true"/>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_hint"
-        android:id="@+id/textView"
-        android:layout_marginTop="180dp"
+        android:id="@+id/text_hint"
+        android:layout_marginTop="160dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -22,29 +40,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_start"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/textView"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/text_hint"
         android:layout_centerHorizontal="true"
         android:onClick="startRecording"/>
-
 
     <Button
         android:id="@+id/button_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_stop"
-        android:layout_marginTop="100dp"
-        android:layout_below="@+id/textView"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/button_start"
         android:layout_centerHorizontal="true"
         android:onClick="stopRecording"/>
+
     <Button
         android:id="@+id/button_analyse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_analyse"
-        android:layout_marginTop="150dp"
-        android:layout_below="@+id/textView"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/button_stop"
         android:layout_centerHorizontal="true"
         android:onClick="stopRecording"/>
+
+
 
 </RelativeLayout>
