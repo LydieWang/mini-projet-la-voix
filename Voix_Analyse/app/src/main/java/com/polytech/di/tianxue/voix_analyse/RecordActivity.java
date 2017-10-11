@@ -1,6 +1,5 @@
 package com.polytech.di.tianxue.voix_analyse;
 
-
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
-
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -87,6 +85,8 @@ public class RecordActivity extends AppCompatActivity {
 
         audioCapturer.stopCapture();
         chronometer.stop();
+
+        //audioCapturer.frequencyAnalyse();
 
     }
 }
