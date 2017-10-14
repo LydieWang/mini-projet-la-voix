@@ -19,6 +19,7 @@ public class RecordActivity extends AppCompatActivity {
     private Chronometer chronometer = null;
     private static final int STAT_START_RECORD = 0;
     private static final int STAT_STOP_RECORD = 1;
+    private RecordThread recordThread = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,22 +72,21 @@ public class RecordActivity extends AppCompatActivity {
 
         setView(STAT_START_RECORD);
 
-        // start capturing the audio
-        audioCapturer = new AudioCapturer();
-        audioCapturer.startCapture();
-
+        // initialise and start the chronometer
         initChronometer();
         chronometer.start();
+
+        // start a new thread of RecordThread
+        recordThread = new RecordThread(audioCapturer);
+        Thread thread = new Thread(recordThread);
+        thread.start();
         //chronometer.setOnChronometerTickListener(new ChronometerListener());
     }
 
     public void stopRecording(View view){
         setView(STAT_STOP_RECORD);
-
-        audioCapturer.stopCapture();
         chronometer.stop();
 
-        //audioCapturer.frequencyAnalyse();
-
+        recordThread.stop();
     }
 }

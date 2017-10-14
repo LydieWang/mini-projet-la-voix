@@ -3,7 +3,6 @@ package com.polytech.di.tianxue.voix_analyse;
 /**
  * Created by Administrator on 07/10/2017.
  */
-
 public class FFT {
     public static final int FFT_N = 4096;
     public static final int SAMPLE_RATE = 44100; //Hz
