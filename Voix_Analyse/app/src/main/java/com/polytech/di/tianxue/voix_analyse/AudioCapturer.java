@@ -33,7 +33,7 @@ public class AudioCapturer {
     private RandomAccessFile randomAccessFile = null;
     private WaveFile waveFile = null;
 
-
+   // FFT fft = new FFT();
     public boolean startCapture(){
         return startCapture(AUDIO_SOURCE, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL_CONFIG, AUDIO_FORMAT);
     }
@@ -133,6 +133,11 @@ public class AudioCapturer {
                             // write the content of audioData into file
                             randomAccessFile.writeShort(Short.reverseBytes(audioData[i]));
                         }
+
+                        // TEST FFT
+                        FFT fft = new FFT();
+                        //fft.getAmplitude(fft.getFFT(audioData));
+
                     }else {
                         throw (new Exception("Fail to read audio data."));
                     }
@@ -158,46 +163,4 @@ public class AudioCapturer {
         }
     }
 
-    /*
-    private void addWaveHeader(){
-
-        try {
-            /* RIFF header
-            randomAccessFile.writeBytes("RIFF"); // riff id
-            randomAccessFile.writeInt(0); // riff chunk size *PLACEHOLDER*
-            randomAccessFile.writeBytes("WAVE"); // wave type
-
-            /* fmt chunk
-            randomAccessFile.writeBytes("fmt "); // fmt id
-            randomAccessFile.writeInt(Integer.reverseBytes(16)); // fmt chunk size
-            randomAccessFile.writeShort(Short.reverseBytes((short) 1)); // format: 1(PCM)
-            randomAccessFile.writeShort(Short.reverseBytes((short) 1)); // channels: 1
-            randomAccessFile.writeInt(Integer.reverseBytes(AUDIO_SAMPLE_RATE)); // samples per second
-            randomAccessFile.writeInt(Integer.reverseBytes((int) (AUDIO_SAMPLE_RATE * 16 / 8))); // BPSecond
-            randomAccessFile.writeShort(Short.reverseBytes((short) (16 / 8))); // BPSample
-            randomAccessFile.writeShort(Short.reverseBytes((short) (16))); // bPSample
-
-            /* data chunk
-            randomAccessFile.writeBytes("data"); // data id
-            randomAccessFile.writeInt(0); // data chunk size
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void setWaveHeaderChunkSize(){
-
-        try {
-            // set RIFF chunk size
-            randomAccessFile.seek(4);
-            randomAccessFile.writeInt(Integer.reverseBytes((int) (randomAccessFile.length() - 8)));
-
-            // set data chunk size
-            randomAccessFile.seek(40);
-            randomAccessFile.writeInt(Integer.reverseBytes((int) (randomAccessFile.length() - 44)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-*/
 }

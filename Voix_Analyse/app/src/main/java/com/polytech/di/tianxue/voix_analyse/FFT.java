@@ -1,13 +1,21 @@
 package com.polytech.di.tianxue.voix_analyse;
 
+import android.util.Log;
+
+import org.jtransforms.fft.*;
+
+import java.security.spec.ECField;
+
 /**
  * Created by Administrator on 07/10/2017.
  */
 public class FFT {
+    private static final int FFT_SIZE = 4096;
+    /*
     public static final int FFT_N = 4096;
     public static final int SAMPLE_RATE = 44100; //Hz
 
-    public static ComplexNumber[] getFFT(ComplexNumber[] data){
+    public ComplexNumber[] getFFT(ComplexNumber[] data){
         int N = data.length;
         if(N == 1){
             return new ComplexNumber[]{data[0]};
@@ -37,6 +45,33 @@ public class FFT {
         }
     }
 
+    public ComplexNumber[] getFrequencyComplex(short[] data){
+        int lengthData = data.length;
+        try{
+            // change the type of data to complex number
+            ComplexNumber[]  data_complex = new ComplexNumber[lengthData];
+            for(int i = 0; i < lengthData; i++){
+                data_complex[i] = new ComplexNumber(data[i],0);
+            }
+
+            ComplexNumber[] frequency_complex = new ComplexNumber[lengthData];
+            frequency_complex = getFFT(data_complex);
+
+            for(int i = 0; i < lengthData; i++){
+                //Log.v("Frequency Complex Real", String.valueOf(frequency_complex[i].getMod()));
+                //Log.v("Frequency Complex Real", String.valueOf(frequency_complex[i].getReal()));
+                //Log.v("Frequency Complex Imag", String.valueOf(frequency_complex[i].getImaginary()));
+                Log.v("Frequency", String.valueOf(frequency_complex[i].getReal()));
+            }
+            return frequency_complex;
+
+        }catch (Exception e){
+            Log.e("FFT",e.getMessage());
+            return new ComplexNumber[0];
+        }
+    }
+*/
+    /*
     public static double GetFrequency(short[] data){
         if(data.length < FFT_N){
             throw new RuntimeException("Data length lower than " + FFT_N);
@@ -61,5 +96,39 @@ public class FFT {
         }
         double fre = fmax*(double)SAMPLE_RATE / FFT_N;
         return fre;
+    }
+    */
+
+
+    public double[] getFFT(short[] data){
+        DoubleFFT_1D fft= new DoubleFFT_1D(FFT_SIZE);
+        double [] doubleFFT = new double[FFT_SIZE];
+
+        for (int i = 0; i < FFT_SIZE && i <= data.length; i++) {
+
+            // transform short to double
+            doubleFFT[i] = (double) data[i]/ 32768.0;
+            //Log.d("double", String.valueOf(doubleFFT[i]));
+        }
+
+        fft.realForward(doubleFFT);
+        return doubleFFT;
+        /*
+        Complex[] complexData = new Complex[audioData.length];
+        for (int i = 0; i < complexData.length; i++) {
+            complextData[i] = new Complex(audioData[i], 0);
+        }
+        Complex[] fftResult = FFT.fft(complexData);
+        */
+    }
+
+    public double[] getAmplitude(double[] doubleFFT){
+        int size = doubleFFT.length/2;
+        double[] amplitude = new double[size];
+        for(int i = 0; i <= size - 1; i ++){
+            amplitude[i] = Math.sqrt(doubleFFT[2 * i] * doubleFFT[2 * i] + doubleFFT[2 * i + 1] * doubleFFT[2 * i + 1]);
+            Log.d("amplitude", String.valueOf(amplitude[i]));
+        }
+        return amplitude;
     }
 }

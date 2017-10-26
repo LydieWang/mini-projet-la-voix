@@ -12,6 +12,14 @@ public class ComplexNumber {
         this.imaginary = imaginary;
     }
 
+    public double getReal(){
+        return real;
+    }
+
+    public double getImaginary(){
+        return imaginary;
+    }
+
     public ComplexNumber(){
         this(0,0);
     }
