@@ -39,7 +39,7 @@
         android:id="@+id/button_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_start"
+        android:text="@string/btn_txt_start_recording"
         android:layout_marginTop="20dp"
         android:layout_below="@id/text_hint"
         android:layout_centerHorizontal="true"
@@ -49,7 +49,7 @@
         android:id="@+id/button_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_stop"
+        android:text="@string/btn_txt_stop_recording"
         android:layout_marginTop="10dp"
         android:layout_below="@id/button_start"
         android:layout_centerHorizontal="true"
@@ -59,12 +59,10 @@
         android:id="@+id/button_analyse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_analyse"
+        android:text="@string/btn_txt_analyse"
         android:layout_marginTop="10dp"
         android:layout_below="@id/button_stop"
         android:layout_centerHorizontal="true"
-        android:onClick="stopRecording"/>
-
-
+        android:onClick="seeTheResult"/>
 
 </RelativeLayout>

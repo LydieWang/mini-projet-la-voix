@@ -1,9 +1,18 @@
 <resources>
-    <string name="app_name">Voix Analyse</string>
-    <string name="button_start">Start</string>
-    <string name="button_stop">Stop</string>
-    <string name="button_analyse">To see the result !</string>
+    <string name="app_name">Voice Analysis</string>
+    <string name="btn_txt_start_recording">Start</string>
+    <string name="btn_txt_stop_recording">Stop</string>
+    <string name="btn_txt_analyse">To see the result !</string>
     <string name="text_hint">Press the button for recording</string>
     <string name="text_record">Recording...</string>
     <string name="text_finish">Record saved !</string>
+    <string name="title_activity_analyse">The result of your voice</string>
+    <string name="text_result">Your voice is perfect !</string>
+    <string name="btn_txt_play">PLAY</string>
+    <string name="btn_txt_pause">PAUSE</string>
+    <string name="btn_txt_stop_playing">STOP</string>
+    <string name="text_hint_play">You can listen to your voice</string>
+    <string name="text_play">PLAYING...</string>
+    <string name="text_pause">PAUSE</string>
+    <string name="text_stop">STOP</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.polytech.di.tianxue.voix_analyse;
 
+import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -25,11 +28,8 @@ public class RecordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-        initView();
-    }
 
-    private void initView(){
-
+        // initialize members so we can manipulate them later
         button_start = (Button)findViewById(R.id.button_start);
         button_stop = (Button)findViewById(R.id.button_stop);
         button_analyse = (Button)findViewById(R.id.button_analyse);
@@ -45,7 +45,6 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void setView(int status){
-
         if(status == STAT_START_RECORD){
             button_start.setEnabled(false);
             button_stop.setEnabled(true);
@@ -86,7 +85,21 @@ public class RecordActivity extends AppCompatActivity {
     public void stopRecording(View view){
         setView(STAT_STOP_RECORD);
         chronometer.stop();
-
         recordThread.stop();
     }
+
+    public void seeTheResult(View view)  {
+        // start a new activity
+        Intent intent = new Intent(this, AnalyseActivity.class);
+        startActivity(intent);
+
+        AudioAnalyse analyse = new AudioAnalyse();
+
+        try {
+            analyse.readFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -33,7 +33,6 @@ public class AudioCapturer {
     private RandomAccessFile randomAccessFile = null;
     private WaveFile waveFile = null;
 
-   // FFT fft = new FFT();
     public boolean startCapture(){
         return startCapture(AUDIO_SOURCE, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL_CONFIG, AUDIO_FORMAT);
     }
@@ -133,10 +132,6 @@ public class AudioCapturer {
                             // write the content of audioData into file
                             randomAccessFile.writeShort(Short.reverseBytes(audioData[i]));
                         }
-
-                        // TEST FFT
-                        FFT fft = new FFT();
-                        //fft.getAmplitude(fft.getFFT(audioData));
 
                     }else {
                         throw (new Exception("Fail to read audio data."));

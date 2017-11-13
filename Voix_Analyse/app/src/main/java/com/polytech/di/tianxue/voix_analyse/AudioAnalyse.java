@@ -15,20 +15,23 @@ import java.io.IOException;
 
 public class AudioAnalyse {
 
-    /*
+
     public void readFile() throws Exception {
-        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
+        if(!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
             throw(new Exception("SDCard not found ! "));
         }
         File file = new File(Environment.getExternalStorageDirectory(),
                 "New Record.wav");
         FileInputStream fis = new FileInputStream(file);
-        byte[] b = new byte[inputStream.available()];
+        byte[] b = new byte[4096];
         fis.read(b);
-        String result = new String(b);
-        System.out.println("读取成功："+result);
+
+        FFT fft = new FFT();
+        double[] fft_double = fft.getFFT(b);
+        double f0 = fft.getFoundamentalFrequency(fft.getAmplitudes(fft_double),fft.getFrequencies(fft_double, 44100));
+        Log.v("Result", String.valueOf(f0));
 
     }
-*/
+
 
 }

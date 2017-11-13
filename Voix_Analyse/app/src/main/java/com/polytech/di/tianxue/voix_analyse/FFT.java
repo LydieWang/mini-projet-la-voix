@@ -4,13 +4,96 @@ import android.util.Log;
 
 import org.jtransforms.fft.*;
 
-import java.security.spec.ECField;
 
 /**
  * Created by Administrator on 07/10/2017.
  */
 public class FFT {
     private static final int FFT_SIZE = 4096;
+
+    public double[] getFFT(short[] data){
+
+        double [] data_doubleFFT = new double[FFT_SIZE];
+        for (int i = 0; i < FFT_SIZE && i <= data.length; i++) {
+
+            // transform short to double
+            data_doubleFFT[i] = (double) data[i]/ 32768.0;
+            //Log.d("double", String.valueOf(doubleFFT[i]));
+        }
+
+        DoubleFFT_1D doubleFFT_1D = new DoubleFFT_1D(FFT_SIZE);
+        doubleFFT_1D.realForward(data_doubleFFT);
+        return data_doubleFFT;
+    }
+
+    public double[] getFFT(byte[] data){
+        double [] data_doubleFFT = new double[FFT_SIZE];
+        for (int i = 0; i < FFT_SIZE && i <= data.length; i++) {
+
+            // transform short to double
+            data_doubleFFT[i] = (double) data[i];
+            //Log.d("double", String.valueOf(doubleFFT[i]));
+        }
+        DoubleFFT_1D doubleFFT_1D = new DoubleFFT_1D(FFT_SIZE);
+        doubleFFT_1D.realForward(data_doubleFFT);
+        return data_doubleFFT;
+    }
+
+    public double[] getAmplitudes(double[] data_doubleFFT){
+        try {
+            if (data_doubleFFT.length % 2 != 0) { // data size should be even
+                throw new Exception("Error: length of FFT illegal !");
+            } else {
+                // we are only interested in the half data of data_doubleFFT
+                int size = data_doubleFFT.length / 2;
+                double[] amplitudes = new double[size];
+                for (int i = 0; i < size; i++) {
+                    // calculate the amplitudes of each frequency - MOD
+                    amplitudes[i] = Math.sqrt(data_doubleFFT[2 * i] * data_doubleFFT[2 * i] + data_doubleFFT[2 * i + 1] * data_doubleFFT[2 * i + 1]);
+                    //Log.d("amplitude", String.valueOf(amplitudes[i]));
+                }
+                return amplitudes;
+            }
+        }catch (Exception e){
+            Log.e("FFT size" , e.getMessage());
+            return null;
+        }
+    }
+
+    public double[] getFrequencies(double[] data_doubleFFT, int sampleRate){
+        try {
+            if (data_doubleFFT.length % 2 != 0) { // data size should be even
+                throw new Exception("Error: length of FFT illegal !");
+            } else {
+                int size = data_doubleFFT.length;
+                double[] frequencies = new double[size/2];
+                for (int i = 0; i < size/2; i++) {
+                    // the frequencies
+                    frequencies[i] = i * sampleRate / size;
+                    //Log.d("frequency", String.valueOf(frequencies[i]));
+                }
+                return frequencies;
+            }
+        }catch (Exception e){
+            Log.e("FFT size" , e.getMessage());
+            return null;
+        }
+    }
+
+    public double getFoundamentalFrequency(double[] amplitudes, double[] frequencies){
+        double a_max = 0;
+        int pos = 0;
+        for(int i = 0; i < amplitudes.length; i++){
+            if(amplitudes[i] > a_max){
+                a_max = amplitudes[i];
+                pos = i;
+            }
+        }
+        Log.v("Amplitude:", String.valueOf(a_max));
+        Log.v("Frequency:", String.valueOf(frequencies[pos]));
+        return frequencies[pos];
+    }
+
     /*
     public static final int FFT_N = 4096;
     public static final int SAMPLE_RATE = 44100; //Hz
@@ -98,37 +181,4 @@ public class FFT {
         return fre;
     }
     */
-
-
-    public double[] getFFT(short[] data){
-        DoubleFFT_1D fft= new DoubleFFT_1D(FFT_SIZE);
-        double [] doubleFFT = new double[FFT_SIZE];
-
-        for (int i = 0; i < FFT_SIZE && i <= data.length; i++) {
-
-            // transform short to double
-            doubleFFT[i] = (double) data[i]/ 32768.0;
-            //Log.d("double", String.valueOf(doubleFFT[i]));
-        }
-
-        fft.realForward(doubleFFT);
-        return doubleFFT;
-        /*
-        Complex[] complexData = new Complex[audioData.length];
-        for (int i = 0; i < complexData.length; i++) {
-            complextData[i] = new Complex(audioData[i], 0);
-        }
-        Complex[] fftResult = FFT.fft(complexData);
-        */
-    }
-
-    public double[] getAmplitude(double[] doubleFFT){
-        int size = doubleFFT.length/2;
-        double[] amplitude = new double[size];
-        for(int i = 0; i <= size - 1; i ++){
-            amplitude[i] = Math.sqrt(doubleFFT[2 * i] * doubleFFT[2 * i] + doubleFFT[2 * i + 1] * doubleFFT[2 * i + 1]);
-            Log.d("amplitude", String.valueOf(amplitude[i]));
-        }
-        return amplitude;
-    }
 }
