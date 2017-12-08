@@ -120,24 +120,33 @@ public class AudioCapturer {
             short[] audioData = new short[minBufferSize/2];
             int readSize;
 
-            try {
 
+            try {
                 while(audioRecord.getRecordingState() == audioRecord.RECORDSTATE_RECORDING){
                     // write the audio data to audioData
                     readSize = audioRecord.read(audioData, 0, audioData.length);
                     if(readSize != audioRecord.ERROR_INVALID_OPERATION  ||
                            readSize != audioRecord.ERROR_BAD_VALUE ){
 
-                        for(int i = 0; i < readSize; i++){
+                        for(int i = 0; i < readSize; i++) {
                             // write the content of audioData into file
                             randomAccessFile.writeShort(Short.reverseBytes(audioData[i]));
+                            // get the highest amplitude
+                            if (audioData[i] > AudioData.maxAmplitude) {
+                               AudioData.maxAmplitude = audioData[i];
+                            }
+                            // get the lowest amplitude
+                            if (audioData[i] < AudioData.minAmplitude) {
+                                AudioData.minAmplitude = audioData[i];
+                            }
+                            AudioData.data.add(audioData[i]);
                         }
-
+                        // update the number of the data
+                        AudioData.length +=  readSize;
                     }else {
                         throw (new Exception("Fail to read audio data."));
                     }
                 }
-
             } catch (Exception e) {
                 Log.e("Audio Data", e.getMessage());
             }finally {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -92,14 +93,6 @@ public class RecordActivity extends AppCompatActivity {
         // start a new activity
         Intent intent = new Intent(this, AnalyseActivity.class);
         startActivity(intent);
-
-        AudioAnalyse analyse = new AudioAnalyse();
-
-        try {
-            analyse.readFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

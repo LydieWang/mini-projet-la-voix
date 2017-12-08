@@ -1,13 +1,11 @@
 package com.polytech.di.tianxue.voix_analyse;
 
 import android.os.Bundle;
-import android.os.TestLooperManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class AnalyseActivity extends AppCompatActivity {
@@ -16,6 +14,8 @@ public class AnalyseActivity extends AppCompatActivity {
     private Button buttonPause;
     private Button buttonStop;
     private TextView textHint;
+    private LinearLayout layout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,7 @@ public class AnalyseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,7 +34,13 @@ public class AnalyseActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        */
 
+        init();
+
+    }
+
+    private void init(){
         buttonPlay = (Button)findViewById(R.id.button_play_audio);
         buttonPause = (Button)findViewById(R.id.button_pause_audio);
         buttonStop = (Button)findViewById(R.id.button_stop_audio);
@@ -42,7 +49,11 @@ public class AnalyseActivity extends AppCompatActivity {
         buttonPlay.setEnabled(true);
         buttonPause.setEnabled(false);
         buttonStop.setEnabled(false);
+
+        layout = (LinearLayout) findViewById(R.id.layout_analyse);
+
     }
+
 
     public void playAudio(View view){
         buttonPlay.setEnabled(false);
@@ -72,5 +83,23 @@ public class AnalyseActivity extends AppCompatActivity {
     protected  void onDestroy(){
         audioPlayer.destroy();
         super.onDestroy();
+    }
+
+    public void showWaves(View view){
+        final DrawDataView drawDataView = new DrawDataView(this);
+        drawDataView.setMinimumHeight(300);
+        drawDataView.setMinimumWidth(500);
+        //通知view组件重绘
+        drawDataView.invalidate();
+        layout.addView(drawDataView);
+    }
+
+    public void showFrequencies(View view){
+        final DrawFrequencyView drawFrequencyView = new DrawFrequencyView(this);
+        drawFrequencyView.setMinimumHeight(300);
+        drawFrequencyView.setMinimumWidth(500);
+        //通知view组件重绘
+        drawFrequencyView.invalidate();
+        layout.addView(drawFrequencyView);
     }
 }

@@ -11,8 +11,11 @@
     <string name="btn_txt_play">PLAY</string>
     <string name="btn_txt_pause">PAUSE</string>
     <string name="btn_txt_stop_playing">STOP</string>
+
     <string name="text_hint_play">You can listen to your voice</string>
     <string name="text_play">PLAYING...</string>
     <string name="text_pause">PAUSE</string>
     <string name="text_stop">STOP</string>
+    <string name="btn_txt_show_wave">Show Waves</string>
+    <string name="btn_txt_show_frequency">Show Frequencies</string>
 </resources>
