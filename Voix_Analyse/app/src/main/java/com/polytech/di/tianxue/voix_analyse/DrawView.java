@@ -9,8 +9,8 @@ import android.view.View;
  * Created by Administrator on 07/12/2017.
  */
 
-public class DrawDataView extends View {
-    public DrawDataView(Context context) {
+public class DrawView extends View {
+    public DrawView(Context context) {
         super(context);
     }
 
@@ -19,9 +19,12 @@ public class DrawDataView extends View {
         super.onDraw(canvas);
 
         final int canvasWidth = canvas.getWidth();
-        final int canvasHeight = 300;
+        final int canvasHeight = 600;
+
+        /*******************************************************************************/
+        /* Draw Data */
         final int offsetX = 5;
-        final int offsetY = canvasHeight/2;
+        final int offsetY = canvasHeight/4;
         final short maxA = AudioData.maxAmplitude;
         final short minA_abs = (short) Math.abs(AudioData.minAmplitude);
         final long dataLength = AudioData.length;
@@ -33,7 +36,7 @@ public class DrawDataView extends View {
             height = minA_abs * 2;
         }
 
-        final double scaleY = (double) canvasHeight/height;
+        final double scaleY = (double) canvasHeight/2/height;
         final double scaleX = (double) canvasWidth/AudioData.length;
 
         Paint paint1 = new Paint();
@@ -41,7 +44,7 @@ public class DrawDataView extends View {
         // X
         canvas.drawLine(offsetX, offsetY, canvasWidth - offsetX, offsetY, paint1);
         // Y
-        canvas.drawLine(offsetX, 0, offsetX, canvasHeight, paint1);
+        canvas.drawLine(offsetX, 0, offsetX, canvasHeight/2, paint1);
 
         final Paint paint2 = new Paint();
         paint2.setColor(Color.BLUE);
@@ -56,5 +59,29 @@ public class DrawDataView extends View {
         }
         //canvas.drawPath(path, paint2);
 
+
+        // draw a line to separate two parts
+        canvas.drawLine(0, canvasHeight/2, canvasWidth, canvasHeight/2, paint1);
+
+        /*******************************************************************************/
+        /* Draw Frequencies*/
+        final int offsetY2 = canvasHeight;
+
+        // X
+        canvas.drawLine(offsetX, offsetY2, canvasWidth - offsetX, offsetY2, paint1);
+        // Y
+        canvas.drawLine(offsetX, offsetY2/2, offsetX, offsetY2, paint1);
+
+
+        double[] data_doubleFFT = FFT.getFFT(AudioData.data);
+        //double[] frequencies = FFT.getFrequencies(data_doubleFFT,44100);
+        double[] amplitudes = FFT.getAmplitudes(data_doubleFFT);
+        final double scaleY2 = (double) canvasHeight / 2/ FFT.maxAmplitude;
+        final double scaleX2 = (double) canvasWidth/FFT.FFT_N;
+
+        for(int i = 0; i < FFT.FFT_N/2; i++){
+            canvas.drawLine((float)(offsetX + i * scaleX2 *2 ), offsetY2,
+                    (float)(offsetX + i * scaleX2 * 2), (float) (offsetY2 - amplitudes[i] * scaleY2), paint2);
+        }
     }
 }

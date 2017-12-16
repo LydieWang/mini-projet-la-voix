@@ -49,17 +49,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <Button
-            android:id="@+id/button_wave"
+            android:id="@+id/button_wave_freq"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_txt_show_wave"
+            android:text="@string/btn_txt_show_wave_freq"
             android:onClick="showWaves"/>
-        <Button
-            android:id="@+id/button_frequency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_txt_show_frequency"
-            android:onClick="showFrequencies"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -51,7 +51,6 @@ public class AnalyseActivity extends AppCompatActivity {
         buttonStop.setEnabled(false);
 
         layout = (LinearLayout) findViewById(R.id.layout_analyse);
-
     }
 
 
@@ -86,20 +85,17 @@ public class AnalyseActivity extends AppCompatActivity {
     }
 
     public void showWaves(View view){
-        final DrawDataView drawDataView = new DrawDataView(this);
-        drawDataView.setMinimumHeight(300);
-        drawDataView.setMinimumWidth(500);
+        final DrawView drawView = new DrawView(this);
+        drawView.setMinimumHeight(300);
+        drawView.setMinimumWidth(500);
         //通知view组件重绘
-        drawDataView.invalidate();
-        layout.addView(drawDataView);
+        drawView.invalidate();
+        layout.addView(drawView);
+
+        //setView(drawDataView);
     }
 
-    public void showFrequencies(View view){
-        final DrawFrequencyView drawFrequencyView = new DrawFrequencyView(this);
-        drawFrequencyView.setMinimumHeight(300);
-        drawFrequencyView.setMinimumWidth(500);
-        //通知view组件重绘
-        drawFrequencyView.invalidate();
-        layout.addView(drawFrequencyView);
+    private void setView(View view){
+        setContentView(view);
     }
 }

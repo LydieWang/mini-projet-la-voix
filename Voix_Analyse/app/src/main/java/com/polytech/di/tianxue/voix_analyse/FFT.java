@@ -11,20 +11,20 @@ import java.util.List;
  * Created by Administrator on 07/10/2017.
  */
 public class FFT {
-    public static final int FFT_SIZE = 4096;
+    public static final int FFT_N = 4096;
     public static double maxAmplitude = 0;
-
 
     public static double[] getFFT(List<Short> data){
 
-        double [] data_doubleFFT = new double[FFT_SIZE];
+        double [] data_doubleFFT = new double[FFT_N];
 
         try{
-            if(data.size() < FFT_SIZE) {
+            if(data.size() < FFT_N) {
                 throw new Exception("Error: length of FFT too small !");
             }else{
-                int offset = data.size()/FFT_SIZE;
-                for (int i = 0; i < FFT_SIZE && i <= data.size(); i += offset) {
+                // set offset
+                int offset = data.size() / FFT_N;
+                for (int i = 0; i < FFT_N && i <= data.size(); i += offset) {
                     // transform short to double
                     data_doubleFFT[i] = (double) data.get(i) / 32768.0;
                 }
@@ -34,7 +34,8 @@ public class FFT {
             return null;
         }
 
-        DoubleFFT_1D doubleFFT_1D = new DoubleFFT_1D(FFT_SIZE);
+        // FFT
+        DoubleFFT_1D doubleFFT_1D = new DoubleFFT_1D(FFT_N);
         doubleFFT_1D.realForward(data_doubleFFT);
         return data_doubleFFT;
     }
@@ -45,7 +46,7 @@ public class FFT {
                 throw new Exception("Error: length of FFT illegal !");
             } else {
                 // we are only interested in the half data of data_doubleFFT
-                int size = data_doubleFFT.length / 2;
+                int size = FFT_N/ 2;
                 double[] amplitudes = new double[size];
                 for (int i = 0; i < size; i++) {
                     // calculate the amplitudes of each frequency - MOD
@@ -63,6 +64,7 @@ public class FFT {
         }
     }
 
+    /*
     public static double[] getFrequencies(double[] data_doubleFFT, int sampleRate){
         try {
             if (data_doubleFFT.length % 2 != 0) { // data size should be even
@@ -81,20 +83,7 @@ public class FFT {
             return null;
         }
     }
-
-    public double getFundamentalFrequency(double[] amplitudes, double[] frequencies){
-        double a_max = 0;
-        int pos = 0;
-        for(int i = 0; i < amplitudes.length; i++){
-            if(amplitudes[i] > a_max){
-                a_max = amplitudes[i];
-                pos = i;
-            }
-        }
-        Log.v("Amplitude:", String.valueOf(a_max));
-        Log.v("Frequency:", String.valueOf(frequencies[pos]));
-        return frequencies[pos];
-    }
+    */
 
     /*
     public static final int FFT_N = 4096;
