@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class FFT {
     public static final int FFT_N = 4096;
-    public static double maxAmplitude = 0;
 
     public static double[] getFFT(List<Short> data){
 
@@ -24,16 +23,17 @@ public class FFT {
             }else{
                 // set offset
                 int offset = data.size() / FFT_N;
-                for (int i = 0; i < FFT_N && i <= data.size(); i += offset) {
-                    // transform short to double
-                    data_doubleFFT[i] = (double) data.get(i) / 32768.0;
+                int i = 0, j =0;
+                while(i < FFT_N){
+                    data_doubleFFT[i] = (double) data.get(j) / 32768.0;
+                    i ++;
+                    j += offset;
                 }
             }
         }catch (Exception e){
             Log.e("FFT size : " , e.getMessage());
             return null;
         }
-
         // FFT
         DoubleFFT_1D doubleFFT_1D = new DoubleFFT_1D(FFT_N);
         doubleFFT_1D.realForward(data_doubleFFT);
@@ -45,15 +45,15 @@ public class FFT {
             if (data_doubleFFT.length % 2 != 0) { // data size should be even
                 throw new Exception("Error: length of FFT illegal !");
             } else {
-                // we are only interested in the half data of data_doubleFFT
                 int size = FFT_N/ 2;
+                // the array for storing the amplitudes
                 double[] amplitudes = new double[size];
                 for (int i = 0; i < size; i++) {
-                    // calculate the amplitudes of each frequency - MOD
+                    // calculate the amplitude of each frequency = sqrt(real[i] * real[i] + img[i] * img[i])
                     amplitudes[i] = Math.sqrt(data_doubleFFT[2 * i] * data_doubleFFT[2 * i] + data_doubleFFT[2 * i + 1] * data_doubleFFT[2 * i + 1]);
                     // get the highest frequency
-                    if(amplitudes[i] > maxAmplitude){
-                        maxAmplitude = amplitudes[i];
+                    if(amplitudes[i] > AudioData.maxAmplitudeFre){
+                        AudioData.maxAmplitudeFre = amplitudes[i];
                     }
                 }
                 return amplitudes;

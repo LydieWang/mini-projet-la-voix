@@ -1,20 +1,29 @@
 package com.polytech.di.tianxue.voix_analyse;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AnalyseActivity extends AppCompatActivity {
+public class AnalysisActivity extends AppCompatActivity {
     private AudioPlayer audioPlayer = new AudioPlayer();
     private Button buttonPlay;
     private Button buttonPause;
     private Button buttonStop;
+    private Button buttonShowWaves;
     private TextView textHint;
     private LinearLayout layout;
+    private ProgressDialog progressDialog;
+    private TextView textShimmer;
+    private double shimmer;
 
 
     @Override
@@ -45,10 +54,12 @@ public class AnalyseActivity extends AppCompatActivity {
         buttonPause = (Button)findViewById(R.id.button_pause_audio);
         buttonStop = (Button)findViewById(R.id.button_stop_audio);
         textHint = (TextView)findViewById(R.id.text_hint_play);
+        buttonShowWaves = (Button)findViewById(R.id.button_wave_freq);
 
         buttonPlay.setEnabled(true);
         buttonPause.setEnabled(false);
         buttonStop.setEnabled(false);
+        buttonShowWaves.setEnabled(true);
 
         layout = (LinearLayout) findViewById(R.id.layout_analyse);
     }
@@ -78,24 +89,65 @@ public class AnalyseActivity extends AppCompatActivity {
         audioPlayer.stop();
     }
 
-
     protected  void onDestroy(){
-        audioPlayer.destroy();
         super.onDestroy();
+        audioPlayer.destroy();
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
+
+    Handler handlerBtnWave = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            final DrawView drawView = new DrawView(AnalysisActivity.this);
+            layout.addView(drawView);
+
+            //close the progressDialog
+            progressDialog.dismiss();
+        }
+    };
 
     public void showWaves(View view){
-        final DrawView drawView = new DrawView(this);
-        drawView.setMinimumHeight(300);
-        drawView.setMinimumWidth(500);
-        //通知view组件重绘
-        drawView.invalidate();
-        layout.addView(drawView);
+        // a progressDialog which shows the information
+        progressDialog = ProgressDialog.show(this,"Drawing the waves","Please wait for a moment ...");
 
-        //setView(drawDataView);
+        new Thread(new Runnable() {// start a new Thread for calculating until it finishes
+            @Override
+            public void run() {
+                // the functions that cost a lot of time
+                AudioData.getAmplitudesFre();
+                AudioData.getMaxAmplitudeAbs();
+                // send message to handler
+                handlerBtnWave.sendEmptyMessage(0);
+            }
+        }).start();
+
+        buttonShowWaves.setEnabled(false);
     }
 
-    private void setView(View view){
-        setContentView(view);
+    Handler handlerBtnShimmer = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            //close the progressDialog
+            progressDialog.dismiss();
+            Log.v("shimmer",String.valueOf(shimmer));
+            textShimmer = new TextView(AnalysisActivity.this);
+            textShimmer.setText("Shimmer : "+ shimmer);
+            layout.addView(textShimmer);
+        }
+    };
+    public void showShimmer(View view){
+        progressDialog = ProgressDialog.show(this,"Drawing the waves","Please wait for a moment ...");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                shimmer = AudioData.getShimmer();
+                handlerBtnShimmer.sendEmptyMessage(0);
+            }
+        }).start();
     }
 }

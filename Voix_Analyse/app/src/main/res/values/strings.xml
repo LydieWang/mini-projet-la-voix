@@ -17,4 +17,5 @@
     <string name="text_pause">PAUSE</string>
     <string name="text_stop">STOP</string>
     <string name="btn_txt_show_wave_freq">Show Waves</string>
+    <string name="btn_txt_show_shimmer">Show Shimmer</string>
 </resources>

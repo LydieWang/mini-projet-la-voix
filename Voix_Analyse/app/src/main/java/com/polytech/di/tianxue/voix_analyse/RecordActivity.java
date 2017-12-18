@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -68,7 +65,7 @@ public class RecordActivity extends AppCompatActivity {
         chronometer.setFormat("%s");
     }
 
-    public void startRecording(View view){
+    public void startRecording(final View view){
 
         setView(STAT_START_RECORD);
 
@@ -80,7 +77,16 @@ public class RecordActivity extends AppCompatActivity {
         recordThread = new RecordThread(audioCapturer);
         Thread thread = new Thread(recordThread);
         thread.start();
-        //chronometer.setOnChronometerTickListener(new ChronometerListener());
+        // recording time <= 5 seconds
+        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                if(SystemClock.elapsedRealtime() - chronometer.getBase() >= 5000)
+                {
+                    stopRecording(view);
+                }
+            }
+        });
     }
 
     public void stopRecording(View view){
@@ -91,7 +97,7 @@ public class RecordActivity extends AppCompatActivity {
 
     public void seeTheResult(View view)  {
         // start a new activity
-        Intent intent = new Intent(this, AnalyseActivity.class);
+        Intent intent = new Intent(this, AnalysisActivity.class);
         startActivity(intent);
     }
 

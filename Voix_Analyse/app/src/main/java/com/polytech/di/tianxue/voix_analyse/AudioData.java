@@ -1,5 +1,7 @@
 package com.polytech.di.tianxue.voix_analyse;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,40 +12,49 @@ import java.util.List;
 public class AudioData {
     public static short maxAmplitude = 0;
     public static short minAmplitude = 0;
+    public static short maxAmplitudeAbs = 0;
+    public static double maxAmplitudeFre = 0;
     public static long length;
-    public static List<Short> data = new ArrayList<Short>();
+    public static List<Short> data = new ArrayList<>();
+    public static double [] amplitudesFre = {0.0};
+    public static double shimmer;
 
-    /*
-    public static short getMaxAmplitude() {
-        return maxAmplitude;
+    public static double[] getAmplitudesFre(){
+        // do FFT transformation to the audio data
+        double[] data_doubleFFT = FFT.getFFT(AudioData.data);
+        amplitudesFre = FFT.getAmplitudes(data_doubleFFT);
+        return amplitudesFre;
     }
 
-    public static void setMaxAmplitude(short maxAmplitude) {
-        AudioData.maxAmplitude = maxAmplitude;
+    public static int getMaxAmplitudeAbs(){
+        if (maxAmplitude > Math.abs(minAmplitude)) {
+            maxAmplitudeAbs = maxAmplitude;
+        } else {
+            maxAmplitudeAbs = (short) Math.abs(minAmplitude);
+        }
+        return maxAmplitudeAbs;
     }
 
-    public static short getMinAmplitude() {
-        return minAmplitude;
-    }
 
-    public static void setMinAmplitude(short minAmplitude) {
-        AudioData.minAmplitude = minAmplitude;
-    }
+    public static double getShimmer(){
+        List<Short> peaks = new ArrayList<>();
+        int A_diff_sum = 0;
+        long A_sum = 0;
 
-    public static long getLength() {
-        return length;
-    }
+        // get peaks (relative)
+        for(int i = 1; i < length - 1; i ++){
+            if(data.get(i) > 0 && data.get(i) > data.get(i-1) && data.get(i) > data.get(i+1)){
+                peaks.add(data.get(i));
+            }
+        }
 
-    public static void setLength(long length) {
-        AudioData.length = length;
+        // get shimmer
+        for(int i = 0; i < peaks.size() - 1; i++){
+            A_diff_sum += Math.abs(peaks.get(i+1) - peaks.get(i));
+            A_sum += peaks.get(i);
+        }
+        A_sum += peaks.get(peaks.size() - 1);
+        shimmer = (double)(A_diff_sum / (peaks.size() - 1))/(double)(A_sum / peaks.size());
+        return shimmer;
     }
-
-    public static List<Short> getData() {
-        return data;
-    }
-
-    public static void setData(List<Short> data) {
-        AudioData.data = data;
-    }
-    */
 }

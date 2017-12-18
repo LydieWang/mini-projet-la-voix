@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AnalyseActivity"
+            android:name=".AnalysisActivity"
             android:label="@string/title_activity_analyse"
             android:parentActivityName=".RecordActivity"
             android:theme="@style/AppTheme.NoActionBar">
