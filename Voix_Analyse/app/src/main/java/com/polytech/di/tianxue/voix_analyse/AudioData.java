@@ -22,6 +22,7 @@ public class AudioData {
     public static double[] getAmplitudesFre(){
         // do FFT transformation to the audio data
         double[] data_doubleFFT = FFT.getFFT(AudioData.data);
+        // store the amplitudes of frequencies
         amplitudesFre = FFT.getAmplitudes(data_doubleFFT);
         return amplitudesFre;
     }
@@ -35,26 +36,109 @@ public class AudioData {
         return maxAmplitudeAbs;
     }
 
-
     public static double getShimmer(){
-        List<Short> peaks = new ArrayList<>();
-        int A_diff_sum = 0;
+        List<Integer> ampPk2Pk = new ArrayList<>();
+        List<Short> ampPositive = new ArrayList<>();
+        List<Short> ampNegative = new ArrayList<>();
+        long A_diff_sum = 0;
         long A_sum = 0;
 
-        // get peaks (relative)
-        for(int i = 1; i < length - 1; i ++){
-            if(data.get(i) > 0 && data.get(i) > data.get(i-1) && data.get(i) > data.get(i+1)){
-                peaks.add(data.get(i));
+        boolean isChangedPos = false;
+        boolean isChangedNeg = false;
+
+        // get amplitude peak-to-peak
+        for(int i = 0; i < length - 1; i ++){
+            //Log.v("Data[i]", String.valueOf(data.get(i)));
+            double ratio = 0.0;
+            // get ratio, if ratio is too small, we consider that this datum is useless
+            if(data.get(i) > 0){
+                ratio = (double)data.get(i) / (double) maxAmplitude;
+            }else {
+                ratio = (double)data.get(i) / (double) minAmplitude;
+            }
+
+            if(ratio > 0.05) {
+                // get all the positive amplitudes in one period
+                if (data.get(i) > 0 && !isChangedPos) {
+                    ampPositive.add(data.get(i));
+                    // if the next element is no longer positive, change the status
+                    if (data.get(i + 1) <= 0) {
+                        isChangedPos = true;
+                    }
+                }
+                // get all the negative amplitudes in one period
+                if (data.get(i) <= 0 && !isChangedNeg) {
+                    ampNegative.add(data.get(i));
+                    // if the next element is no longer negative, change the status
+                    if (data.get(i + 1) > 0) {
+                        isChangedNeg = true;
+                    }
+                }
+            }
+            short max = 0;
+            short min = 0;
+            if(isChangedPos && isChangedNeg){
+                // get the max amplitude in this period
+                if(ampPositive.size() != 0){
+                    max = ampPositive.get(0);
+                    for(int j = 0; j < ampPositive.size(); j++){
+                        if(max < ampPositive.get(j)){
+                            max = ampPositive.get(j);
+                        }
+                    }
+                }
+                // get the min amplitude int this period
+                if(ampNegative.size() != 0){
+                    min = ampNegative.get(0);
+                    for(int j = 0; j < ampNegative.size(); j++){
+                        if(min > ampNegative.get(j)){
+                            min = ampNegative.get(j);
+                        }
+                    }
+                }
+                // add the change between max and min into the list ampPk2Pk
+                ampPk2Pk.add(max - min);
+
+                // clear this two arrays for the next loop
+                ampPositive.clear();
+                ampNegative.clear();
+
+                // reset the two boolean values
+                isChangedPos = false;
+                isChangedNeg = false;
             }
         }
 
-        // get shimmer
-        for(int i = 0; i < peaks.size() - 1; i++){
-            A_diff_sum += Math.abs(peaks.get(i+1) - peaks.get(i));
-            A_sum += peaks.get(i);
+        // get shimmer (relative)
+        for(int i = 0; i < ampPk2Pk.size() - 1; i++){
+            A_diff_sum += Math.abs(ampPk2Pk.get(i) - ampPk2Pk.get(i+1));
+            A_sum += ampPk2Pk.get(i);
         }
-        A_sum += peaks.get(peaks.size() - 1);
-        shimmer = (double)(A_diff_sum / (peaks.size() - 1))/(double)(A_sum / peaks.size());
+
+        try {
+            // add the last peak
+            A_sum += ampPk2Pk.get(ampPk2Pk.size() - 1);
+
+            Log.v("A_diff_sum", String.valueOf(A_diff_sum));
+            Log.v("A_sum", String.valueOf(A_sum));
+            Log.v("ampPk2Pk", String.valueOf(ampPk2Pk));
+
+            Log.v("A_diff_sum_double", String.valueOf((double)A_diff_sum));
+            Log.v("A_sum_double", String.valueOf((double)A_sum));
+
+            // calculate shimmer
+            shimmer = ((double) A_diff_sum / (double) (ampPk2Pk.size() - 1)) / ((double) A_sum / (double) ampPk2Pk.size()) * 100;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        /*
+        double sum = 0;
+        for(int i = 0; i < ampPk2Pk.size() - 1; i++){
+            sum += Math.abs(20 * Math.log10((double)ampPk2Pk.get(i) / (double)ampPk2Pk.get(i+1)));
+        }
+        shimmer = sum / (double)(ampPk2Pk.size() - 1);
+        */
+
         return shimmer;
     }
 }

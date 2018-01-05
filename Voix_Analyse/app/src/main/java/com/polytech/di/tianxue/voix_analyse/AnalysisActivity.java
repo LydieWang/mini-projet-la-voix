@@ -135,12 +135,13 @@ public class AnalysisActivity extends AppCompatActivity {
             progressDialog.dismiss();
             Log.v("shimmer",String.valueOf(shimmer));
             textShimmer = new TextView(AnalysisActivity.this);
-            textShimmer.setText("Shimmer : "+ shimmer);
+            textShimmer.setText("Shimmer : "+ shimmer + "%");
             layout.addView(textShimmer);
         }
     };
+
     public void showShimmer(View view){
-        progressDialog = ProgressDialog.show(this,"Drawing the waves","Please wait for a moment ...");
+        progressDialog = ProgressDialog.show(this,"Calculating the shimmer","Please wait for a moment ...");
 
         new Thread(new Runnable() {
             @Override

@@ -120,7 +120,6 @@ public class AudioCapturer {
             short[] audioData = new short[minBufferSize/2];
             int readSize;
 
-
             try {
                 while(audioRecord.getRecordingState() == audioRecord.RECORDSTATE_RECORDING){
                     // write the audio data to audioData
@@ -139,6 +138,7 @@ public class AudioCapturer {
                             if (audioData[i] < AudioData.minAmplitude) {
                                 AudioData.minAmplitude = audioData[i];
                             }
+                            // copy all the data into AudioData.data
                             AudioData.data.add(audioData[i]);
                         }
                         // update the number of the data

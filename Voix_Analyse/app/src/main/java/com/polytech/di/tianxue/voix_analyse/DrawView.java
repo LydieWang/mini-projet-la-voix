@@ -2,7 +2,6 @@ package com.polytech.di.tianxue.voix_analyse;
 
 import android.content.Context;
 import android.graphics.*;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -12,7 +11,6 @@ import android.view.View;
 public class DrawView extends View {
     public DrawView(Context context) {
         super(context);
-
     }
 
     @Override
