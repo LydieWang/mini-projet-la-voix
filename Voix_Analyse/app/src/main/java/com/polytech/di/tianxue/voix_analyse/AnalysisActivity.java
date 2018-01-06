@@ -19,11 +19,15 @@ public class AnalysisActivity extends AppCompatActivity {
     private Button buttonPause;
     private Button buttonStop;
     private Button buttonShowWaves;
+    private Button buttonShowShimmer;
+    private Button buttonShowJitter;
     private TextView textHint;
     private LinearLayout layout;
     private ProgressDialog progressDialog;
     private TextView textShimmer;
+    private TextView textJitter;
     private double shimmer;
+    private double jitter;
 
 
     @Override
@@ -55,12 +59,16 @@ public class AnalysisActivity extends AppCompatActivity {
         buttonStop = (Button)findViewById(R.id.button_stop_audio);
         textHint = (TextView)findViewById(R.id.text_hint_play);
         buttonShowWaves = (Button)findViewById(R.id.button_wave_freq);
+        buttonShowShimmer = (Button)findViewById(R.id.button_shimmer);
+        buttonShowJitter = (Button)findViewById(R.id.button_jitter);
 
         buttonPlay.setEnabled(true);
         buttonPause.setEnabled(false);
         buttonStop.setEnabled(false);
         buttonShowWaves.setEnabled(true);
-
+        buttonShowShimmer.setEnabled(true);
+        buttonShowJitter.setEnabled(true);
+        
         layout = (LinearLayout) findViewById(R.id.layout_analyse);
     }
 
@@ -133,10 +141,11 @@ public class AnalysisActivity extends AppCompatActivity {
 
             //close the progressDialog
             progressDialog.dismiss();
-            Log.v("shimmer",String.valueOf(shimmer));
             textShimmer = new TextView(AnalysisActivity.this);
             textShimmer.setText("Shimmer : "+ shimmer + "%");
             layout.addView(textShimmer);
+            //disable the button after using it
+            buttonShowShimmer.setEnabled(false);
         }
     };
 
@@ -148,6 +157,32 @@ public class AnalysisActivity extends AppCompatActivity {
             public void run() {
                 shimmer = AudioData.getShimmer();
                 handlerBtnShimmer.sendEmptyMessage(0);
+            }
+        }).start();
+    }
+
+    Handler handlerBtnJitter = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            //close the progressDialog
+            progressDialog.dismiss();
+            textJitter = new TextView(AnalysisActivity.this);
+            textJitter.setText("Jitter : "+ jitter + "%");
+            layout.addView(textJitter);
+            //disable the button after using it
+            buttonShowJitter.setEnabled(false);
+        }
+    };
+
+    public void showJitter(View view){
+        progressDialog = ProgressDialog.show(this,"Calculating the jitter","Please wait for a moment ...");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                jitter = AudioData.getJitter();
+                handlerBtnJitter.sendEmptyMessage(0);
             }
         }).start();
     }

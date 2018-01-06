@@ -39,7 +39,7 @@ public class DrawView extends View {
 
         final Paint paint2 = new Paint();
         paint2.setColor(Color.BLUE);
-        paint2.setStrokeWidth(1);
+        paint2.setStrokeWidth(2);
 
         //Paint paint3 = new Paint();
         //paint3.setColor(Color.RED);

@@ -12,7 +12,6 @@ public class AudioPlayer {
     private static final String FILE_NAME = "New Record.wav";
     private String filePath = Environment.getExternalStorageDirectory().getPath();
     private MediaPlayer mediaPlayer  =   new MediaPlayer();
-    private int duration = 0;
     private boolean isPaused = false;
     private boolean isStopped = false;
 
@@ -71,8 +70,5 @@ public class AudioPlayer {
         if(mediaPlayer != null){
             mediaPlayer.release();
         }
-    }
-    public int getDuration(){
-        return duration;
     }
 }

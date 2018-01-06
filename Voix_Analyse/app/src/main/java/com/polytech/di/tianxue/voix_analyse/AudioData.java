@@ -18,10 +18,11 @@ public class AudioData {
     public static List<Short> data = new ArrayList<>();
     public static double [] amplitudesFre = {0.0};
     public static double shimmer;
+    public static double jitter;
 
     public static double[] getAmplitudesFre(){
         // do FFT transformation to the audio data
-        double[] data_doubleFFT = FFT.getFFT(AudioData.data);
+        double[] data_doubleFFT = FFT.getFFT(data);
         // store the amplitudes of frequencies
         amplitudesFre = FFT.getAmplitudes(data_doubleFFT);
         return amplitudesFre;
@@ -119,12 +120,13 @@ public class AudioData {
             // add the last peak
             A_sum += ampPk2Pk.get(ampPk2Pk.size() - 1);
 
+            /*
             Log.v("A_diff_sum", String.valueOf(A_diff_sum));
             Log.v("A_sum", String.valueOf(A_sum));
             Log.v("ampPk2Pk", String.valueOf(ampPk2Pk));
-
             Log.v("A_diff_sum_double", String.valueOf((double)A_diff_sum));
             Log.v("A_sum_double", String.valueOf((double)A_sum));
+            */
 
             // calculate shimmer
             shimmer = ((double) A_diff_sum / (double) (ampPk2Pk.size() - 1)) / ((double) A_sum / (double) ampPk2Pk.size()) * 100;
@@ -140,5 +142,36 @@ public class AudioData {
         */
 
         return shimmer;
+    }
+
+    public static double getJitter(){
+        int size = FFT.FFT_N/2;
+        double [] T = new double[size];
+        double T_diff_sum = 0.0;
+        double T_sum = 0.0;
+
+        getAmplitudesFre();
+
+        try {
+            for(int i = 0; i < size; i ++){
+                T[i] = 1 / amplitudesFre[i];
+            }
+
+            // get jitter (relative)
+            for(int i = 0; i < size - 1; i++){
+                T_diff_sum += Math.abs(T[i] - T[i+1]);
+                T_sum += T[i];
+            }
+
+            T_sum += T[size - 1];
+
+            Log.v("T_diff_sum", String.valueOf(T_diff_sum));
+            Log.v("T_sum", String.valueOf(T_sum));
+            jitter = (T_diff_sum / (double)(size - 1)) / (T_sum / (double)size) * 100;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return jitter;
     }
 }

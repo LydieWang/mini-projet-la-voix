@@ -16,7 +16,7 @@ public class RecordActivity extends AppCompatActivity {
     private Button button_start;
     private Button button_stop;
     private Button button_analyse;
-    private AudioCapturer audioCapturer;
+
     private Chronometer chronometer = null;
     private static final int STAT_START_RECORD = 0;
     private static final int STAT_STOP_RECORD = 1;
@@ -74,7 +74,7 @@ public class RecordActivity extends AppCompatActivity {
         chronometer.start();
 
         // start a new thread of RecordThread
-        recordThread = new RecordThread(audioCapturer);
+        recordThread = new RecordThread();
         Thread thread = new Thread(recordThread);
         thread.start();
         // recording time <= 5 seconds
@@ -99,6 +99,21 @@ public class RecordActivity extends AppCompatActivity {
         // start a new activity
         Intent intent = new Intent(this, AnalysisActivity.class);
         startActivity(intent);
+    }
+
+    public class RecordThread implements Runnable{
+        private AudioCapturer audioCapturer;
+        @Override
+        public void run() {
+            // start capturing the audio
+            audioCapturer = new AudioCapturer();
+            audioCapturer.startCapture();
+        }
+
+        public void stop(){
+            // stop capturing the audio
+            audioCapturer.stopCapture();
+        }
     }
 
 }

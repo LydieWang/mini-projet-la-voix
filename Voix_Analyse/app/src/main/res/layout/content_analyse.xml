@@ -60,7 +60,14 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_txt_show_shimmer"
             android:onClick="showShimmer"/>
+        <Button
+            android:id="@+id/button_jitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_txt_show_jitter"
+            android:onClick="showJitter"/>
         </LinearLayout>
+
     </LinearLayout>
 
 
