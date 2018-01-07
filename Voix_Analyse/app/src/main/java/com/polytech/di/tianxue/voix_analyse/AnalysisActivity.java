@@ -21,6 +21,7 @@ public class AnalysisActivity extends AppCompatActivity {
     private Button buttonShowWaves;
     private Button buttonShowShimmer;
     private Button buttonShowJitter;
+    private Button buttonProcessData;
     private TextView textHint;
     private LinearLayout layout;
     private ProgressDialog progressDialog;
@@ -61,6 +62,7 @@ public class AnalysisActivity extends AppCompatActivity {
         buttonShowWaves = (Button)findViewById(R.id.button_wave_freq);
         buttonShowShimmer = (Button)findViewById(R.id.button_shimmer);
         buttonShowJitter = (Button)findViewById(R.id.button_jitter);
+        buttonProcessData = (Button)findViewById(R.id.button_extract_audio);
 
         buttonPlay.setEnabled(true);
         buttonPause.setEnabled(false);
@@ -68,6 +70,7 @@ public class AnalysisActivity extends AppCompatActivity {
         buttonShowWaves.setEnabled(true);
         buttonShowShimmer.setEnabled(false);
         buttonShowJitter.setEnabled(false);
+        buttonProcessData.setEnabled(true);
 
         layout = (LinearLayout) findViewById(R.id.layout_analyse);
     }
@@ -195,6 +198,7 @@ public class AnalysisActivity extends AppCompatActivity {
             progressDialog.dismiss();
             buttonShowShimmer.setEnabled(true);
             buttonShowJitter.setEnabled(true);
+            buttonProcessData.setEnabled(false);
 
         }
     };
