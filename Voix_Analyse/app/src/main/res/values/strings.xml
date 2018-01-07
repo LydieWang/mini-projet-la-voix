@@ -8,6 +8,7 @@
     <string name="text_finish">Record saved !</string>
     <string name="title_activity_analyse">The result of your voice</string>
     <string name="text_result">Your voice is perfect !</string>
+    <string name="btn_txt_extract">Process Audio Data</string>
     <string name="btn_txt_play">PLAY</string>
     <string name="btn_txt_pause">PAUSE</string>
     <string name="btn_txt_stop_playing">STOP</string>

@@ -66,9 +66,9 @@ public class AnalysisActivity extends AppCompatActivity {
         buttonPause.setEnabled(false);
         buttonStop.setEnabled(false);
         buttonShowWaves.setEnabled(true);
-        buttonShowShimmer.setEnabled(true);
-        buttonShowJitter.setEnabled(true);
-        
+        buttonShowShimmer.setEnabled(false);
+        buttonShowJitter.setEnabled(false);
+
         layout = (LinearLayout) findViewById(R.id.layout_analyse);
     }
 
@@ -183,6 +183,30 @@ public class AnalysisActivity extends AppCompatActivity {
             public void run() {
                 jitter = AudioData.getJitter();
                 handlerBtnJitter.sendEmptyMessage(0);
+            }
+        }).start();
+    }
+
+    Handler handlerBtnProcessData = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            //close the progressDialog
+            progressDialog.dismiss();
+            buttonShowShimmer.setEnabled(true);
+            buttonShowJitter.setEnabled(true);
+
+        }
+    };
+
+    public void processData(View view) {
+        progressDialog = ProgressDialog.show(this,"Processing audio data","Please wait for a moment ...");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AudioData.processData();
+                handlerBtnProcessData.sendEmptyMessage(0);
             }
         }).start();
     }

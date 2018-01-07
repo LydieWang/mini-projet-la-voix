@@ -13,6 +13,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <Button
+            android:id="@+id/button_extract_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_txt_extract"
+            android:onClick="processData" />
+
         <TextView
             android:id="@+id/text_hint_play"
             android:layout_width="wrap_content"
