@@ -13,6 +13,7 @@ import java.util.List;
 public class FFT {
     public static final int FFT_N = 4096;
 
+    /*
     public static double[] getFFT(List<Short> data){
 
         double [] data_doubleFFT = new double[FFT_N];
@@ -39,7 +40,9 @@ public class FFT {
         doubleFFT_1D.realForward(data_doubleFFT);
         return data_doubleFFT;
     }
+    */
 
+    /*
     public static double[] getAmplitudes(double[] data_doubleFFT){
         try {
             if (data_doubleFFT.length % 2 != 0) { // data size should be even
@@ -63,4 +66,5 @@ public class FFT {
             return null;
         }
     }
+    */
 }

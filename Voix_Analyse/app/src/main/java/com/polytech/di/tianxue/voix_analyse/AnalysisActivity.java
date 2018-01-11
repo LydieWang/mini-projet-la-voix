@@ -1,17 +1,16 @@
 package com.polytech.di.tianxue.voix_analyse;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import java.text.DecimalFormat;
+
 
 public class AnalysisActivity extends AppCompatActivity {
     private AudioPlayer audioPlayer = new AudioPlayer();
@@ -19,39 +18,24 @@ public class AnalysisActivity extends AppCompatActivity {
     private Button buttonPause;
     private Button buttonStop;
     private Button buttonShowWaves;
-    private Button buttonShowShimmer;
-    private Button buttonShowJitter;
     private Button buttonProcessData;
     private TextView textHint;
     private LinearLayout layout;
     private ProgressDialog progressDialog;
     private TextView textShimmer;
     private TextView textJitter;
+    private TextView textF0;
+    private TextView testResult;
     private double shimmer;
     private double jitter;
-
+    private double f0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analyse);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        */
 
         init();
-
     }
 
     private void init(){
@@ -60,21 +44,16 @@ public class AnalysisActivity extends AppCompatActivity {
         buttonStop = (Button)findViewById(R.id.button_stop_audio);
         textHint = (TextView)findViewById(R.id.text_hint_play);
         buttonShowWaves = (Button)findViewById(R.id.button_wave_freq);
-        buttonShowShimmer = (Button)findViewById(R.id.button_shimmer);
-        buttonShowJitter = (Button)findViewById(R.id.button_jitter);
-        buttonProcessData = (Button)findViewById(R.id.button_extract_audio);
+        buttonProcessData = (Button)findViewById(R.id.button_analyse_audio);
 
         buttonPlay.setEnabled(true);
         buttonPause.setEnabled(false);
         buttonStop.setEnabled(false);
-        buttonShowWaves.setEnabled(true);
-        buttonShowShimmer.setEnabled(false);
-        buttonShowJitter.setEnabled(false);
+        buttonShowWaves.setEnabled(false);
         buttonProcessData.setEnabled(true);
 
         layout = (LinearLayout) findViewById(R.id.layout_analyse);
     }
-
 
     public void playAudio(View view){
         buttonPlay.setEnabled(false);
@@ -128,7 +107,7 @@ public class AnalysisActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // the functions that cost a lot of time
-                AudioData.getAmplitudesFre();
+                //AudioData.getAmplitudesFre();
                 AudioData.getMaxAmplitudeAbs();
                 // send message to handler
                 handlerBtnWave.sendEmptyMessage(0);
@@ -138,80 +117,65 @@ public class AnalysisActivity extends AppCompatActivity {
         buttonShowWaves.setEnabled(false);
     }
 
-    Handler handlerBtnShimmer = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            //close the progressDialog
-            progressDialog.dismiss();
-            textShimmer = new TextView(AnalysisActivity.this);
-            textShimmer.setText("Shimmer : "+ shimmer + "%");
-            layout.addView(textShimmer);
-            //disable the button after using it
-            buttonShowShimmer.setEnabled(false);
-        }
-    };
-
-    public void showShimmer(View view){
-        progressDialog = ProgressDialog.show(this,"Calculating the shimmer","Please wait for a moment ...");
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                shimmer = AudioData.getShimmer();
-                handlerBtnShimmer.sendEmptyMessage(0);
-            }
-        }).start();
-    }
-
-    Handler handlerBtnJitter = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            //close the progressDialog
-            progressDialog.dismiss();
-            textJitter = new TextView(AnalysisActivity.this);
-            textJitter.setText("Jitter : "+ jitter + "%");
-            layout.addView(textJitter);
-            //disable the button after using it
-            buttonShowJitter.setEnabled(false);
-        }
-    };
-
-    public void showJitter(View view){
-        progressDialog = ProgressDialog.show(this,"Calculating the jitter","Please wait for a moment ...");
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                jitter = AudioData.getJitter();
-                handlerBtnJitter.sendEmptyMessage(0);
-            }
-        }).start();
-    }
-
     Handler handlerBtnProcessData = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
-            //close the progressDialog
-            progressDialog.dismiss();
-            buttonShowShimmer.setEnabled(true);
-            buttonShowJitter.setEnabled(true);
-            buttonProcessData.setEnabled(false);
+            DecimalFormat df = new DecimalFormat("0.00");
+
+            try{
+                //close the progressDialog
+                progressDialog.dismiss();
+                buttonProcessData.setEnabled(false);
+                buttonShowWaves.setEnabled(true);
+
+                // show shimmer
+                textShimmer = new TextView(AnalysisActivity.this);
+                textShimmer.setText("Shimmer : "+ df.format(shimmer * 100) + "%");
+                layout.addView(textShimmer);
+
+                // show jitter
+                textJitter = new TextView(AnalysisActivity.this);
+                textJitter.setText("Jitter : "+ df.format(jitter * 100) + "%");
+                layout.addView(textJitter);
+
+                // show f0
+                textF0 = new TextView(AnalysisActivity.this);
+                textF0.setText("F0 : "+ df.format(f0) + "Hz");
+                layout.addView(textF0);
+
+                // show result
+                testResult = new TextView(AnalysisActivity.this);
+                if(shimmer < 3.0 && jitter < 1.0){
+                    testResult.setText("Your voice is good. No problem !");
+                }else
+                    testResult.setText("Your voice is not perfect. You'd better see a doctor.");
+
+                layout.addView(testResult);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
 
         }
     };
 
-    public void processData(View view) {
-        progressDialog = ProgressDialog.show(this,"Processing audio data","Please wait for a moment ...");
+    public void analyseData(View view) {
+        progressDialog = ProgressDialog.show(this,"Analysing audio data","Please wait for a moment ...");
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 AudioData.processData();
+                FeaturesCalculation featuresCalculation = new FeaturesCalculation(AudioData.data_processed);
+
+                shimmer = featuresCalculation.getShimmer();
+                jitter = featuresCalculation.getJitter();
+                f0 = featuresCalculation.getF0();
+
                 handlerBtnProcessData.sendEmptyMessage(0);
             }
         }).start();
     }
+
 }

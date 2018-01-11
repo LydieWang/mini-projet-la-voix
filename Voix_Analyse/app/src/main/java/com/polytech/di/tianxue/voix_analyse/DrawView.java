@@ -26,11 +26,12 @@ public class DrawView extends View {
         final int offsetX = 5;
         final int offsetY = canvasHeight / 4;
 
-        final long dataLength = AudioData.length;
+        // final long dataLength = AudioData.length;
+        final long dataLength = AudioData.data.size();
         int height = AudioData.maxAmplitudeAbs * 2;
 
         final double scaleY = (double) canvasHeight / 2 / height;
-        final double scaleX = (double) canvasWidth / AudioData.length;
+        final double scaleX = (double) canvasWidth /dataLength;
 
         // X
         canvas.drawLine(offsetX, offsetY, canvasWidth - offsetX, offsetY, paint1);
@@ -47,7 +48,9 @@ public class DrawView extends View {
         //path.moveTo((float) (0 * scaleX + offsetX),(float)(offsetY - AudioData.data.get(0)* scaleY));
         for (int i = 10; i < dataLength; i += 10) {
             //path.lineTo((float) (offsetX + i * scaleX),(float)(offsetY - AudioData.data.get(i)* scaleY));
-            canvas.drawPoint((float) (offsetX + i * scaleX), (float) (offsetY - AudioData.data.get(i) * scaleY), paint2);
+            canvas.drawLine((float) (offsetX + i * scaleX), (float) (offsetY - AudioData.data.get(i) * scaleY),
+                    (float) (offsetX + i * scaleX), offsetY, paint2);
+            //canvas.drawPoint((float) (offsetX + i * scaleX), (float) (offsetY - AudioData.data.get(i) * scaleY), paint2);
         }
         //canvas.drawPath(path, paint3);
 
@@ -56,6 +59,7 @@ public class DrawView extends View {
 
         /*******************************************************************************/
         /* Draw Frequencies*/
+        /*
         final int offsetY2 = canvasHeight;
 
         // X
@@ -70,6 +74,7 @@ public class DrawView extends View {
             canvas.drawLine((float) (offsetX + i * scaleX2), offsetY2,
                     (float) (offsetX + i * scaleX2), (float) (offsetY2 - AudioData.amplitudesFre[i] * scaleY2), paint2);
         }
+        */
     }
 
 }

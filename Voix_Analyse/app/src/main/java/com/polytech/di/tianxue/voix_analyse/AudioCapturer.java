@@ -39,6 +39,10 @@ public class AudioCapturer {
 
     public boolean startCapture(int audioSource, int sampleRateInHz, int channelConfig, int audioFormat) {
 
+        // clear all the data before starting
+        AudioData.data.clear();
+        AudioData.length = 0;
+
         if(createAudioFile()){ // make sure that the file is created
             // set minBufferSize
             minBufferSize = AudioRecord.getMinBufferSize(sampleRateInHz,

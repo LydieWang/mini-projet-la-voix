@@ -14,17 +14,23 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button_extract_audio"
+            android:id="@+id/button_analyse_audio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_txt_extract"
-            android:onClick="processData" />
+            android:onClick="analyseData" />
+        <Button
+            android:id="@+id/button_wave_freq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_txt_show_wave_freq"
+            android:onClick="showWaves"/>
 
         <TextView
             android:id="@+id/text_hint_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
+            android:textSize="15sp"
             android:text="@string/text_hint_play"/>
 
         <LinearLayout
@@ -50,29 +56,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btn_txt_stop_playing"
                 android:onClick="stopAudio"/>
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/button_wave_freq"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_txt_show_wave_freq"
-            android:onClick="showWaves"/>
-        <Button
-            android:id="@+id/button_shimmer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_txt_show_shimmer"
-            android:onClick="showShimmer"/>
-        <Button
-            android:id="@+id/button_jitter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_txt_show_jitter"
-            android:onClick="showJitter"/>
         </LinearLayout>
 
     </LinearLayout>

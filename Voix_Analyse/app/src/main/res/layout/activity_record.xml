@@ -56,13 +56,34 @@
         android:onClick="stopRecording"/>
 
     <Button
+        android:id="@+id/button_restart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_txt_restart"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/button_stop"
+        android:layout_centerHorizontal="true"
+        android:onClick="restart"/>
+
+    <Button
         android:id="@+id/button_analyse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_txt_analyse"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/button_stop"
+        android:layout_below="@id/button_restart"
         android:layout_centerHorizontal="true"
         android:onClick="seeTheResult"/>
+
+    <Button
+        android:id="@+id/button_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TEST"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/button_analyse"
+        android:layout_centerHorizontal="true"
+        android:onClick="test"/>
+
 
 </RelativeLayout>
