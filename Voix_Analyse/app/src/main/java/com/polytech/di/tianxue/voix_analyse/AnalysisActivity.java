@@ -139,30 +139,30 @@ public class AnalysisActivity extends AppCompatActivity {
 
                 // show shimmer
                 textShimmer = new TextView(AnalysisActivity.this);
-                textShimmer.setText("Shimmer : "+ df.format(shimmer * 100) + "%");
+                textShimmer.setText("   Shimmer : "+ df.format(shimmer * 100) + "%");
                 layout.addView(textShimmer);
 
                 // show jitter
                 textJitter = new TextView(AnalysisActivity.this);
-                textJitter.setText("Jitter : "+ df.format(jitter * 100) + "%");
+                textJitter.setText("    Jitter : "+ df.format(jitter * 100) + "%");
                 layout.addView(textJitter);
 
                 // show f0
                 textF0 = new TextView(AnalysisActivity.this);
-                textF0.setText("F0 : "+ df.format(f0) + "Hz");
+                textF0.setText("    F0 : "+ df.format(f0) + "Hz");
                 layout.addView(textF0);
 
                 // show result
                 testResult = new TextView(AnalysisActivity.this);
 
                 if(shimmer > SHIMMER_LIMIT_ERROR && jitter > JITTER_LIMIT_ERROR){
-                    testResult.setText("Please test your voice again because there is some problem with the data !");
+                    testResult.setText("    Please test your voice again because there is some problem with the data !");
                 }
 
                 if(shimmer < SHIMMER_LIMIT && jitter < JITTER_LIMIT){
-                    testResult.setText("Your voice is good. No problem !");
+                    testResult.setText("    Your voice is good. No problem !");
                 }else
-                    testResult.setText("Your voice is not perfect. You'd better see a doctor.");
+                    testResult.setText("    Your voice is not perfect. You'd better see a doctor.");
 
                 layout.addView(testResult);
             }catch (Exception e){
