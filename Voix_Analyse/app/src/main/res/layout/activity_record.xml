@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_txt_stop_recording"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@id/button_start"
         android:layout_centerHorizontal="true"
         android:onClick="stopRecording"/>
@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_txt_restart"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@id/button_stop"
         android:layout_centerHorizontal="true"
         android:onClick="restart"/>
@@ -70,17 +70,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_txt_analyse"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@id/button_restart"
         android:layout_centerHorizontal="true"
-        android:onClick="seeTheResult"/>
+        android:onClick="analyse"/>
 
     <Button
         android:id="@+id/button_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TEST"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@id/button_analyse"
         android:layout_centerHorizontal="true"
         android:onClick="test"/>

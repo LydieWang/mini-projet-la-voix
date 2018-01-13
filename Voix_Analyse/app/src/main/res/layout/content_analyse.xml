@@ -13,18 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button_analyse_audio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_txt_extract"
-            android:onClick="analyseData" />
-        <Button
-            android:id="@+id/button_wave_freq"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_txt_show_wave_freq"
-            android:onClick="showWaves"/>
 
         <TextView
             android:id="@+id/text_hint_play"
@@ -58,6 +46,18 @@
                 android:onClick="stopAudio"/>
         </LinearLayout>
 
+        <Button
+            android:id="@+id/button_wave_freq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_txt_show_wave_freq"
+            android:onClick="showWaves"/>
+        <Button
+            android:id="@+id/button_return"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_txt_return"
+            android:onClick="goBack"/>
     </LinearLayout>
 
 

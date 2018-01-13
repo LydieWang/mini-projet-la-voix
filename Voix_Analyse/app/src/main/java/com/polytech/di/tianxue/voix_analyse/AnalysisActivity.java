@@ -1,6 +1,7 @@
 package com.polytech.di.tianxue.voix_analyse;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,7 +19,6 @@ public class AnalysisActivity extends AppCompatActivity {
     private Button buttonPause;
     private Button buttonStop;
     private Button buttonShowWaves;
-    private Button buttonProcessData;
     private TextView textHint;
     private LinearLayout layout;
     private ProgressDialog progressDialog;
@@ -29,6 +29,10 @@ public class AnalysisActivity extends AppCompatActivity {
     private double shimmer;
     private double jitter;
     private double f0;
+    private final double SHIMMER_LIMIT = 0.03;
+    private final double JITTER_LIMIT = 0.01;
+    private final double SHIMMER_LIMIT_ERROR = 0.2;
+    private final double JITTER_LIMIT_ERROR = 0.2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class AnalysisActivity extends AppCompatActivity {
         setContentView(R.layout.activity_analyse);
 
         init();
+        analyseData();
     }
 
     private void init(){
@@ -44,13 +49,11 @@ public class AnalysisActivity extends AppCompatActivity {
         buttonStop = (Button)findViewById(R.id.button_stop_audio);
         textHint = (TextView)findViewById(R.id.text_hint_play);
         buttonShowWaves = (Button)findViewById(R.id.button_wave_freq);
-        buttonProcessData = (Button)findViewById(R.id.button_analyse_audio);
 
         buttonPlay.setEnabled(true);
         buttonPause.setEnabled(false);
         buttonStop.setEnabled(false);
         buttonShowWaves.setEnabled(false);
-        buttonProcessData.setEnabled(true);
 
         layout = (LinearLayout) findViewById(R.id.layout_analyse);
     }
@@ -117,6 +120,12 @@ public class AnalysisActivity extends AppCompatActivity {
         buttonShowWaves.setEnabled(false);
     }
 
+    public void goBack(View view){
+        Intent intent = new Intent(this, RecordActivity.class);
+        startActivity(intent);
+        audioPlayer.stop();
+    }
+
     Handler handlerBtnProcessData = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -126,7 +135,6 @@ public class AnalysisActivity extends AppCompatActivity {
             try{
                 //close the progressDialog
                 progressDialog.dismiss();
-                buttonProcessData.setEnabled(false);
                 buttonShowWaves.setEnabled(true);
 
                 // show shimmer
@@ -146,7 +154,12 @@ public class AnalysisActivity extends AppCompatActivity {
 
                 // show result
                 testResult = new TextView(AnalysisActivity.this);
-                if(shimmer < 3.0 && jitter < 1.0){
+
+                if(shimmer > SHIMMER_LIMIT_ERROR && jitter > JITTER_LIMIT_ERROR){
+                    testResult.setText("Please test your voice again because there is some problem with the data !");
+                }
+
+                if(shimmer < SHIMMER_LIMIT && jitter < JITTER_LIMIT){
                     testResult.setText("Your voice is good. No problem !");
                 }else
                     testResult.setText("Your voice is not perfect. You'd better see a doctor.");
@@ -160,7 +173,7 @@ public class AnalysisActivity extends AppCompatActivity {
         }
     };
 
-    public void analyseData(View view) {
+    public void analyseData() {
         progressDialog = ProgressDialog.show(this,"Analysing audio data","Please wait for a moment ...");
 
         new Thread(new Runnable() {

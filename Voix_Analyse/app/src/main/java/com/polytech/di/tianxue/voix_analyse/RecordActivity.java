@@ -121,7 +121,7 @@ public class RecordActivity extends AppCompatActivity {
         recordThread.stop();
     }
 
-    public void seeTheResult(View view)  {
+    public void analyse(View view)  {
         // start a new activity
         Intent intent = new Intent(this, AnalysisActivity.class);
         startActivity(intent);
@@ -166,6 +166,7 @@ public class RecordActivity extends AppCompatActivity {
 
         }
     };
+
      public void test(View view){
          progressDialog = ProgressDialog.show(this,"Analysing audio data","Please wait for a moment ...");
 
