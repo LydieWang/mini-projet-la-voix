@@ -12,9 +12,14 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
- * Created by Administrator on 30/09/2017.
+ * @author      Tianxue WANG and Wenli YAN
+ * @version     2018.0115
+ * @date        30/09/2017
  */
 
+/**
+ * The class getting the audio data form the micro
+ */
 public class AudioCapturer {
 
     /* the parameters of the audio */
@@ -33,10 +38,18 @@ public class AudioCapturer {
     private RandomAccessFile randomAccessFile = null;
     private WaveFile waveFile = null;
 
+    /**
+     * The method starting capturing
+     * @return the result of another method
+     */
     public boolean startCapture(){
         return startCapture(AUDIO_SOURCE, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL_CONFIG, AUDIO_FORMAT);
     }
 
+    /**
+     * The method starting capturing
+     * @return if it's successful
+     */
     public boolean startCapture(int audioSource, int sampleRateInHz, int channelConfig, int audioFormat) {
 
         // clear all the data before starting
@@ -74,6 +87,10 @@ public class AudioCapturer {
         return true;
     }
 
+
+    /**
+     * The method stopping capturing
+     */
     public void stopCapture() {
 
         if(audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING){
@@ -82,6 +99,10 @@ public class AudioCapturer {
         }
     }
 
+    /**
+     * The method creating a new audio file
+     * @return
+     */
     private boolean createAudioFile(){
         try{
             if(!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
@@ -117,7 +138,13 @@ public class AudioCapturer {
         return true;
     }
 
+    /**
+     * The class starting a new thread for capturing the data
+     */
     private class AudioCaptureThread implements Runnable{
+        /**
+         * The method overridden starting the thread
+         */
         @Override
         public void run() {
 
@@ -158,7 +185,7 @@ public class AudioCapturer {
                 audioRecord = null;
 
                 waveFile.setWaveHeaderChunkSize();
-
+                AudioData.setMaxAmplitudeAbs();
                 if(randomAccessFile != null){
                     try {
                         randomAccessFile.close();

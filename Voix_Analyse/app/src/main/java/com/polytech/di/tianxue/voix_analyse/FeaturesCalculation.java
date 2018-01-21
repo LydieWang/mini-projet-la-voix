@@ -6,21 +6,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 10/01/2018.
+ * @author      Tianxue WANG and Wenli YAN
+ * @version     2018.0115
+ * @date        10/01/2017
  */
 
+/**
+ * The class calculating features of the voice
+ */
 public class FeaturesCalculation {
-    final private int BASE_FRAGMENT = 180;
-    final private int OFFSET = 90;
+    final private int BASE_FRAGMENT = 200;
+    final private int OFFSET = 100;
     private List<Integer> pitchPositions = new ArrayList<>();
     private List<Integer> T = new ArrayList<>();
     List<Short> data;
 
+    /**
+     * Constructor
+     * @param data the audio data
+     */
     public FeaturesCalculation(List<Short> data){
         this.data = data;
         calculatePeriods();
     }
 
+    /**
+     * The method calculating the pitch periods
+     */
     private void calculatePeriods(){
         int size = data.size();
         int maxAmp = 0;
@@ -67,6 +79,10 @@ public class FeaturesCalculation {
     }
 
     // FEATURE NUMBER 1 : SHIMMER
+    /**
+     * The method calculating the Shimmer
+     * @return the Shimmer
+     */
     public double getShimmer(){
         int minAmp = 0;
         int maxAmp;
@@ -102,6 +118,10 @@ public class FeaturesCalculation {
     }
 
     // FEATURE NUMBER 2 : JITTER
+    /**
+     * The method calculating the Jitter
+     * @return the Jitter
+     */
     public double getJitter(){
         double T_diff_sum = 0.0; // sum of difference between every two periods
         double T_sum = 0.0; // sum of all periods
@@ -122,7 +142,11 @@ public class FeaturesCalculation {
         return (T_diff_sum / (double) (T.size() - 1)) / (T_sum / (double) T.size());
     }
 
-    // FEATURE NUMBER 2 : FUNDAMENTAL FREQUENCY
+    // FEATURE NUMBER 3 : FUNDAMENTAL FREQUENCY
+    /**
+     * The method calculating the fundamental frequency
+     * @return the fundamental frequency
+     */
     public  double getF0(){
         double sum = 0.0; // sum of all the fundamental frequencies
         for(double t : T){

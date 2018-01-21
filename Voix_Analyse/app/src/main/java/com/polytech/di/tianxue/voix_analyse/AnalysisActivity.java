@@ -12,7 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.text.DecimalFormat;
 
+/**
+ * @author      Tianxue WANG and Wenli YAN
+ * @version     2018.0115
+ * @date        07/12/2017
+ */
 
+/**
+ * The class of the activity of analysis
+ */
 public class AnalysisActivity extends AppCompatActivity {
     private AudioPlayer audioPlayer = new AudioPlayer();
     private Button buttonPlay;
@@ -34,6 +42,10 @@ public class AnalysisActivity extends AppCompatActivity {
     private final double SHIMMER_LIMIT_ERROR = 0.2;
     private final double JITTER_LIMIT_ERROR = 0.2;
 
+    /**
+     * The method overridden
+     * @param savedInstanceState the saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +55,9 @@ public class AnalysisActivity extends AppCompatActivity {
         analyseData();
     }
 
+    /**
+     * The method initialising the view of this activity
+     */
     private void init(){
         buttonPlay = (Button)findViewById(R.id.button_play_audio);
         buttonPause = (Button)findViewById(R.id.button_pause_audio);
@@ -58,6 +73,10 @@ public class AnalysisActivity extends AppCompatActivity {
         layout = (LinearLayout) findViewById(R.id.layout_analyse);
     }
 
+    /**
+     * The button for playing the sound
+     * @param view the view
+     */
     public void playAudio(View view){
         buttonPlay.setEnabled(false);
         buttonPause.setEnabled(true);
@@ -66,6 +85,10 @@ public class AnalysisActivity extends AppCompatActivity {
         audioPlayer.play();
     }
 
+    /**
+     * The button for pausing the sound
+     * @param view the view
+     */
     public void pauseAudio(View view){
         buttonPlay.setEnabled(true);
         buttonPause.setEnabled(false);
@@ -74,6 +97,10 @@ public class AnalysisActivity extends AppCompatActivity {
         audioPlayer.pause();
     }
 
+    /**
+     * The button for stopping the sound
+     * @param view the view
+     */
     public void stopAudio(View view){
         buttonPlay.setEnabled(true);
         buttonPause.setEnabled(false);
@@ -82,6 +109,9 @@ public class AnalysisActivity extends AppCompatActivity {
         audioPlayer.stop();
     }
 
+    /**
+     * The method releasing the resources
+     */
     protected  void onDestroy(){
         super.onDestroy();
         audioPlayer.destroy();
@@ -90,36 +120,21 @@ public class AnalysisActivity extends AppCompatActivity {
         }
     }
 
-    Handler handlerBtnWave = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            final DrawView drawView = new DrawView(AnalysisActivity.this);
-            layout.addView(drawView);
-
-            //close the progressDialog
-            progressDialog.dismiss();
-        }
-    };
-
+    /**
+     * The button for showing the diagrams
+     * @param view the view
+     */
     public void showWaves(View view){
-        // a progressDialog which shows the information
-        progressDialog = ProgressDialog.show(this,"Drawing the waves","Please wait for a moment ...");
-
-        new Thread(new Runnable() {// start a new Thread for calculating until it finishes
-            @Override
-            public void run() {
-                // the functions that cost a lot of time
-                //AudioData.getAmplitudesFre();
-                AudioData.getMaxAmplitudeAbs();
-                // send message to handler
-                handlerBtnWave.sendEmptyMessage(0);
-            }
-        }).start();
+        DrawView drawView = new DrawView(AnalysisActivity.this);
+        layout.addView(drawView);
 
         buttonShowWaves.setEnabled(false);
     }
 
+    /**
+     * The button for going back to the first activity
+     * @param view the view
+     */
     public void goBack(View view){
         Intent intent = new Intent(this, RecordActivity.class);
         startActivity(intent);
@@ -173,6 +188,9 @@ public class AnalysisActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * The method analysing the audio data
+     */
     public void analyseData() {
         progressDialog = ProgressDialog.show(this,"Analysing audio data","Please wait for a moment ...");
 

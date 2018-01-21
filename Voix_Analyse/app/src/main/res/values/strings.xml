@@ -17,6 +17,6 @@
     <string name="text_play">PLAYING...</string>
     <string name="text_pause">PAUSE</string>
     <string name="text_stop">STOP</string>
-    <string name="btn_txt_show_wave_freq">VISUALISATIOM</string>
+    <string name="btn_txt_show_wave_freq">VISUALISATION</string>
     <string name="btn_txt_return">GO BACK</string>
 </resources>

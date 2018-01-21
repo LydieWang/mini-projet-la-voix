@@ -8,8 +8,13 @@ import java.util.List;
 
 
 /**
- * Created by Administrator on 07/10/2017.
+ * @author      Tianxue WANG and Wenli YAN
+ * @version     2018.0115
+ * @date        07/10/2017
+ *
+ * This class is not in use. There may be some problems in the functions.
  */
+
 public class FFT {
     public static final int FFT_N = 4096;
 

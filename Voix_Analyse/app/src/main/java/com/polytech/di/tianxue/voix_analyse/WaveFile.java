@@ -4,17 +4,30 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
- * Created by Administrator on 14/10/2017.
+ * @author      Tianxue WANG and Wenli YAN
+ * @version     2018.0115
+ * @date        14/10/2017
  */
 
-
+/**
+ * The class transforming a PCM file into a WAVE file
+ */
 public class WaveFile {
-    private RandomAccessFile randomAccessFile;
+    private RandomAccessFile randomAccessFile;// the file we want to change the format
 
+    /**
+     * Constructor
+     * @param randomAccessFile
+     */
     WaveFile(RandomAccessFile randomAccessFile){
         this.randomAccessFile = randomAccessFile;
     }
 
+    /**
+     * The method adding the header of le format WAVE
+     * @param sampleRate the sampling frequency
+     * @param bitsPerSecond the sampling bits
+     */
     public void addWaveHeader(int sampleRate, int bitsPerSecond){
 
         try {
@@ -41,6 +54,9 @@ public class WaveFile {
         }
     }
 
+    /**
+     * The method set chunk size
+     */
     public void setWaveHeaderChunkSize(){
 
         try {

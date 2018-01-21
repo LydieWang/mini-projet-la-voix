@@ -4,9 +4,15 @@ import android.media.MediaPlayer;
 import android.os.Environment;
 
 /**
- * Created by Administrator on 13/11/2017.
+ * @author      Tianxue WANG and Wenli YAN
+ * @version     2018.0115
+ * @date        13/11/2017
  */
 
+
+/**
+ * The class play the sound
+ */
 public class AudioPlayer {
 
     private static final String FILE_NAME = "New Record.wav";
@@ -15,6 +21,10 @@ public class AudioPlayer {
     private boolean isPaused = false;
     private boolean isStopped = false;
 
+    /**
+     * The method setting the audio data to play
+     * @return if it's successful
+     */
     public boolean setData(){
         try {
             if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
@@ -31,6 +41,9 @@ public class AudioPlayer {
         return true;
     }
 
+    /**
+     * The method playing the sound
+     */
     public void play(){
         try {
             if(!isPaused && !isStopped){ // if it's the first time to play this audio file
@@ -54,6 +67,9 @@ public class AudioPlayer {
         }
     }
 
+    /**
+     * The method pausing the sound
+     */
     public void pause(){
         if(mediaPlayer.isPlaying() && !isPaused && !isStopped){
             mediaPlayer.pause();
@@ -61,11 +77,17 @@ public class AudioPlayer {
         isPaused = true;
     }
 
+    /**
+     * The method stopping the sound
+     */
     public void stop(){
         mediaPlayer.stop();
         isStopped = true;
     }
 
+    /**
+     * The method releasing the resources
+     */
     public void destroy(){
         if(mediaPlayer != null){
             mediaPlayer.release();

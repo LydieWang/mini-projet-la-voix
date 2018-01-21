@@ -5,18 +5,27 @@ import android.graphics.*;
 import android.view.View;
 
 /**
- * Created by Administrator on 07/12/2017.
+ * @author      Tianxue WANG and Wenli YAN
+ * @version     2018.0115
+ * @date        07/12/2017
  */
 
+/**
+ * The class drawing the diagrams on the screen
+ */
 public class DrawView extends View {
     public DrawView(Context context) {
         super(context);
     }
 
+    /**
+     * The method overridden which draws
+     * @param canvas the canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        final int canvasWidth = canvas.getWidth()-90;///
+        final int canvasWidth = canvas.getWidth()-90;
         final int canvasHeight = 600;
         Paint paint1 = new Paint();
         paint1.setColor(Color.BLACK);
@@ -24,9 +33,6 @@ public class DrawView extends View {
         paint1.setTextSize(20);
         Paint paintBack = new Paint();
         paintBack.setColor(Color.LTGRAY);
-
-
-
 
         /*******************************************************************************/
         /* Draw Data */
@@ -38,14 +44,14 @@ public class DrawView extends View {
         int height = AudioData.maxAmplitudeAbs * 2;
 
         final double scaleY = (double) canvasHeight / 1.5 / height;
-        final double scaleX = (double) ( canvasWidth-30 ) /dataLength;
+        final double scaleX = (double) ( canvasWidth - 30 ) /dataLength;
 
         // Background
         canvas.drawRect(50,50, canvasWidth + 60,canvasHeight-50, paintBack);
 
         // Scale
-        final double s = (canvasHeight-100)/ 4;
-        for (int i = offsetY; i <= canvasHeight -50; i += s) {
+        final double s = (canvasHeight - 100)/ 4;
+        for (int i = offsetY; i <= canvasHeight - 50; i += s) {
 
             canvas.drawLine( offsetX, i, offsetX + 10, i, paint1);
 
